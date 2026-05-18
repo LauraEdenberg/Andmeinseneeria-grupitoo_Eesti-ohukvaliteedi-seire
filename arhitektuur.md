@@ -6,11 +6,23 @@
 
 [Kirjuta ühe-kahe lausega oma äriküsimus täpselt. Näiteks: "Millistes kauplustes ja mis kellaaegadel on müügitõhusus (käive külastaja kohta) kõrgeim?"]
 
+Milline on õhukvaliteedi dünaamika Eesti suurimates linnades (Tallinn, Tartu, Narva) ja kas see ületab kriitilisi piirmäärasid?
+
+Allikast saadavad õhukvaliteedi näitajad:
+
+CO (µg/m³)
+NO₂ (µg/m³)
+O₃ (µg/m³)
+PM2.5 (µg/m³) - see näitaja on Tallinna andmetest puudu
+PM10 (µg/m³)
+SO₂ (µg/m³)
+Piirväärtuste allikas: https://www.riigiteataja.ee/aktilisa/1060/3201/9012/KKM_m8_lisa1.pdf#
+
 ## Mõõdikud
 
-1. [Esimene mõõdik — kirjelda, mida arvutate ja kuidas]
-2. [Teine mõõdik]
-3. [Kolmas mõõdik — vabatahtlik]
+1. Päevane näitajate kõikumine (min/max + aeg)
+2. Näitajate piirmäärade ületamise sagedus (nt kuus, aastas)
+3. Hooajalisuse indeks
 
 ## Andmeallikad
 

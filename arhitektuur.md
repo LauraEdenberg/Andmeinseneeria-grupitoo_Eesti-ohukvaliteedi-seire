@@ -10,12 +10,13 @@ Milline on õhukvaliteedi dünaamika Eesti suurimates linnades (Tallinn, Tartu, 
 
 Allikast saadavad õhukvaliteedi näitajad:
 
-CO (µg/m³)
-NO₂ (µg/m³)
-O₃ (µg/m³)
-PM2.5 (µg/m³) - see näitaja on Tallinna andmetest puudu
-PM10 (µg/m³)
-SO₂ (µg/m³)
+- CO (µg/m³)
+- NO₂ (µg/m³)
+- O₃ (µg/m³)
+- PM2.5 (µg/m³) - see näitaja on Tallinna andmetest puudu
+- PM10 (µg/m³)
+- SO₂ (µg/m³)
+  
 Piirväärtuste allikas: https://www.riigiteataja.ee/aktilisa/1060/3201/9012/KKM_m8_lisa1.pdf#
 
 ## Mõõdikud

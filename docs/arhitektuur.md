@@ -13,7 +13,7 @@ Allikast saadavad õhukvaliteedi näitajad:
 - CO (µg/m³)
 - NO₂ (µg/m³)
 - O₃ (µg/m³)
-- PM2.5 (µg/m³) - see näitaja on Tallinna andmetest puudu
+- PM2.5 (µg/m³) - see näitaja on Tallinna andmetest puudu (Anni: mulle tundub, et Õismäel mõõdetakse PM2.5 ka)
 - PM10 (µg/m³)
 - SO₂ (µg/m³)
   

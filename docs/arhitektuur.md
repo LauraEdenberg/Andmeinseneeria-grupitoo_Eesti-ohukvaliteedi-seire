@@ -19,6 +19,8 @@ Allikast saadavad õhukvaliteedi näitajad:
   
 Piirväärtuste allikas: https://www.riigiteataja.ee/aktilisa/1060/3201/9012/KKM_m8_lisa1.pdf#
 
+Anni: Euroopa õhukvaliteedi indeksi arvutamiseks kasutatakse PM10, PM2.5, NO2, O3 ja SO2 kontsentratsioone. Mul üks mõte oli, et valida need näitajad. (https://airindex.eea.europa.eu/AQI/index.html#)
+
 ## Mõõdikud
 
 1. Päevane näitajate kõikumine (min/max + aeg)

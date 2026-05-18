@@ -19,8 +19,8 @@ Piirväärtuste allikas: https://www.riigiteataja.ee/aktilisa/1060/3201/9012/KKM
 **Mõõdikud:**
 
 1. Päevane näitajate kõikumine (min/max + aeg) 
-2. Näitajate piirmäärade ületamise sagedus
-3. [Kolmas KPI või mõõdik — vabatahtlik]
+2. Näitajate piirmäärade ületamise sagedus (nt kuus, aastas)
+3. Hooajalisuse indeks
 
 
 ## Arhitektuur

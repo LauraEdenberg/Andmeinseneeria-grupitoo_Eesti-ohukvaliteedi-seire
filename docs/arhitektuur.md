@@ -21,10 +21,15 @@ Piirväärtuste allikas: https://www.riigiteataja.ee/aktilisa/1060/3201/9012/KKM
 
 Anni: Euroopa õhukvaliteedi indeksi arvutamiseks kasutatakse PM10, PM2.5, NO2, O3 ja SO2 kontsentratsioone. Mul üks mõte oli, et valida need näitajad. (https://airindex.eea.europa.eu/AQI/index.html#)
 
-| Pollutant | Index level | -------- | ---- | --------- | -------------- |
-| --------- | Good | Fair | Moderate | Poor | Very poor | Extremely poor |
-| --------- | ----------- | -------- | ---- | --------- | -------------- |
+| Pollutant | Index level |  |         |      |           |                |
+| --------- | ----------- |--| --------| ---- | --------- | -------------- |
+|           | Good | Fair | Moderate | Poor   | Very poor | Extremely poor |
 | Particles less than 2.5 µm (PM2.5) | 0-5 | 6-15 | 16-50 |	51-90 |	91-140 |	>140 | 
+| Particles less than 10 µm (PM10) |	0-15 |	16-45 |	46-120 |	121-195 |	196-270 |	>270 |
+| Ozone (O3) |	0-60 |	61-100 |	101-120 |	121-160 |	161-180 |	>180 |
+| Nitrogen dioxide (NO2) |	0-10 |	11-25 |	26-60 |	61-100 |	101-150 |	>150 |
+| Sulphur dioxide (SO2) |	0-20 |	21-40 |	41-125 |	126-190 |	191-275 |	>275 |
+
 
 ## Mõõdikud
 

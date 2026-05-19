@@ -6,7 +6,7 @@
 
 [Kirjuta ühe-kahe lausega oma äriküsimus täpselt. Näiteks: "Millistes kauplustes ja mis kellaaegadel on müügitõhusus (käive külastaja kohta) kõrgeim?"]
 
-Milline on õhukvaliteedi dünaamika Eesti suurimates linnades (Tallinn, Tartu, Narva) ja kas see ületab kriitilisi piirmäärasid?
+Milline on õhukvaliteedi dünaamika Eesti suurimates linnades (Tallinn, Tartu, Narva) ja kas mõõdetud saasteainete tasemed ületavad kriitilisi piirmäärasid?
 
 Allikast saadavad õhukvaliteedi näitajad:
 

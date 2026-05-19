@@ -36,6 +36,7 @@ Euroopa õhukvaliteedi indeksi arvutamiseks kasutatakse PM10, PM2.5, NO2, O3 ja 
 1. Päevane näitajate kõikumine (min/max + aeg)
 2. Näitajate piirmäärade ületamise sagedus (nt kuus, aastas)
 3. Hooajalisuse indeks
+4. Linnade võrdlus
 
 ## Andmeallikad
 
@@ -80,7 +81,7 @@ flowchart LR
 
 | Risk | Mõju | Maandus |
 |------|------|---------|
-| [Risk 1 — näiteks: API ei vasta] | [Mis juhtub?] | [Kuidas maandad?] |
+|API andmed pole stabiilsed või puuduvad osad| Andmevoog katkeb| Andmekvaliteedi testid |
 | [Risk 2] | [Mis juhtub?] | [Kuidas maandad?] |
 | [Risk 3] | [Mis juhtub?] | [Kuidas maandad?] |
 

@@ -13,13 +13,13 @@ Allikast saadavad õhukvaliteedi näitajad:
 - CO (µg/m³)
 - NO₂ (µg/m³)
 - O₃ (µg/m³)
-- PM2.5 (µg/m³) - see näitaja on Tallinna andmetest puudu (Anni: mulle tundub, et Õismäel mõõdetakse PM2.5 ka)
+- PM2.5 (µg/m³) - see näitaja on Tallinna andmetest puudu (mulle tundub, et Õismäel mõõdetakse PM2.5 ka)
 - PM10 (µg/m³)
 - SO₂ (µg/m³)
   
 Piirväärtuste allikas: https://www.riigiteataja.ee/aktilisa/1060/3201/9012/KKM_m8_lisa1.pdf#
 
-Anni: Euroopa õhukvaliteedi indeksi arvutamiseks kasutatakse PM10, PM2.5, NO2, O3 ja SO2 kontsentratsioone. Mul üks mõte oli, et valida need näitajad. (https://airindex.eea.europa.eu/AQI/index.html#)
+Euroopa õhukvaliteedi indeksi arvutamiseks kasutatakse PM10, PM2.5, NO2, O3 ja SO2 kontsentratsioone. Mul üks mõte oli, et valida need näitajad. (https://airindex.eea.europa.eu/AQI/index.html#)
 
 | Pollutant | Index level |  |         |      |           |                |
 | --------- | ----------- |--| --------| ---- | --------- | -------------- |

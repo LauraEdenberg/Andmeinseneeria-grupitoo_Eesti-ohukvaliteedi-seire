@@ -21,6 +21,11 @@ Piirväärtuste allikas: https://www.riigiteataja.ee/aktilisa/1060/3201/9012/KKM
 
 Anni: Euroopa õhukvaliteedi indeksi arvutamiseks kasutatakse PM10, PM2.5, NO2, O3 ja SO2 kontsentratsioone. Mul üks mõte oli, et valida need näitajad. (https://airindex.eea.europa.eu/AQI/index.html#)
 
+| Pollutant | Index level | -------- | ---- | --------- | -------------- |
+| --------- | Good | Fair | Moderate | Poor | Very poor | Extremely poor |
+| --------- | ----------- | -------- | ---- | --------- | -------------- |
+| Particles less than 2.5 µm (PM2.5) | 0-5 | 6-15 | 16-50 |	51-90 |	91-140 |	>140 | 
+
 ## Mõõdikud
 
 1. Päevane näitajate kõikumine (min/max + aeg)
@@ -31,8 +36,8 @@ Anni: Euroopa õhukvaliteedi indeksi arvutamiseks kasutatakse PM10, PM2.5, NO2, 
 
 | Allikas | Tüüp | Ajas muutuv? | Roll |
 |---------|------|--------------|------|
-| [Nimi] | [API / CSV / DB] | Jah, [iga X tundi / päeva] | [Milleks kasutatakse?] |
-| [Nimi] | [seed / dim-tabel] | Ei, staatiline | [Milleks kasutatakse?] |
+| OpenAQ API | Avalik HTTP API | Jah, [iga X tundi / päeva] | Põhiandmevoog |
+| mart.dim_location | Staatiline dimensioonitabel | Ei, staatiline | Asukohtade püsivad tunnused ja API päringu koordinaadid |
 
 ## Andmevoog
 
@@ -55,6 +60,7 @@ flowchart LR
 |------|------|
 | `staging` | Hoiab allika andmeid töötlemata kujul. |
 | `mart` | Hoiab transformeeritud ja ärilogikat sisaldavaid tabeleid. |
+| `quality` | Hoiab kvaliteeditestide tulemusi. |
 
 ## Tööjaotus
 
@@ -75,4 +81,4 @@ flowchart LR
 
 ## Privaatsus ja turve
 
-[Kirjelda, millised isiku- või tundlikud andmed teie projektis esinevad (kui üldse) ja kuidas neid kaitsete. Isikuandmed peavad olema anonümiseeritud. Andmebaasi paroolid peavad tulema `.env` failist.]
+Projekt kasutab ainult avalikke õhukvaliteediandmeid. Isikuandmeid ei koguta. Andmebaasi kasutajanimi ja parool tulevad .env failist. Päris .env faili ei tohi reposse lisada.

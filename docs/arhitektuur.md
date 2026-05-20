@@ -4,32 +4,9 @@
 
 ## Äriküsimus
 
-[Kirjuta ühe-kahe lausega oma äriküsimus täpselt. Näiteks: "Millistes kauplustes ja mis kellaaegadel on müügitõhusus (käive külastaja kohta) kõrgeim?"]
-
 Milline on õhukvaliteedi dünaamika Eesti suurimates linnades (Tallinn, Tartu, Narva) ja kas mõõdetud saasteainete tasemed ületavad kriitilisi piirmäärasid?
 
-Allikast saadavad õhukvaliteedi näitajad:
-
-- CO (µg/m³)
-- NO₂ (µg/m³)
-- O₃ (µg/m³)
-- PM2.5 (µg/m³) - see näitaja on Tallinna andmetest puudu (mulle tundub, et Õismäel mõõdetakse PM2.5 ka)
-- PM10 (µg/m³)
-- SO₂ (µg/m³)
-  
-Piirväärtuste allikas: https://www.riigiteataja.ee/aktilisa/1060/3201/9012/KKM_m8_lisa1.pdf#
-
-Euroopa õhukvaliteedi indeksi arvutamiseks kasutatakse PM10, PM2.5, NO2, O3 ja SO2 kontsentratsioone. Mul üks mõte oli, et valida need näitajad. (https://airindex.eea.europa.eu/AQI/index.html#)
-
-| Pollutant | Index level |  |         |      |           |                |
-| --------- | ----------- |--| --------| ---- | --------- | -------------- |
-|           | Good | Fair | Moderate | Poor   | Very poor | Extremely poor |
-| Particles less than 2.5 µm (PM2.5) | 0-5 | 6-15 | 16-50 |	51-90 |	91-140 |	>140 | 
-| Particles less than 10 µm (PM10) |	0-15 |	16-45 |	46-120 |	121-195 |	196-270 |	>270 |
-| Ozone (O3) |	0-60 |	61-100 |	101-120 |	121-160 |	161-180 |	>180 |
-| Nitrogen dioxide (NO2) |	0-10 |	11-25 |	26-60 |	61-100 |	101-150 |	>150 |
-| Sulphur dioxide (SO2) |	0-20 |	21-40 |	41-125 |	126-190 |	191-275 |	>275 |
-
+Äkki nii selgem: Kuidas erineb õhukvaliteet Eesti suuremates linnades (Tallinna, Tartu, Narva) ning kui sageli ületavad peamised saasteained kehtestatud õhukvaliteedi piirväärtuseid? 
 
 ## Mõõdikud
 
@@ -38,6 +15,11 @@ Euroopa õhukvaliteedi indeksi arvutamiseks kasutatakse PM10, PM2.5, NO2, O3 ja 
 3. Hooajalisuse indeks
 4. Linnade võrdlus
 5. Hinnang viimase üles laetud tunni õhukvaliteedile
+
+6. Saasteainete keskmised väärtused linnati
+7. Piirväärtuste ületamise arv mingis ajaühikus (seadus määrab ületamiseks erinevad keskmistamise perioodid)
+8. Domineeriv saasteaine eri linnades (st milline on European Air Quality Index’i määraja)
+
 
 ## Andmeallikad
 
@@ -89,3 +71,26 @@ flowchart LR
 ## Privaatsus ja turve
 
 Projekt kasutab ainult avalikke õhukvaliteediandmeid. Isikuandmeid ei koguta. Andmebaasi kasutajanimi ja parool tulevad .env failist. Päris .env faili ei tohi reposse lisada.
+
+### Lisainfo
+
+Allikast saadavad õhukvaliteedi näitajad:
+- CO (µg/m³)
+- NO₂ (µg/m³)
+- O₃ (µg/m³)
+- PM2.5 (µg/m³) - see näitaja on Tallinna andmetest puudu (mulle tundub, et Õismäel mõõdetakse PM2.5 ka)
+- PM10 (µg/m³)
+- SO₂ (µg/m³)
+  
+Piirväärtuste allikas: https://www.riigiteataja.ee/aktilisa/1060/3201/9012/KKM_m8_lisa1.pdf#
+
+Euroopa õhukvaliteedi indeksi arvutamiseks kasutatakse PM10, PM2.5, NO2, O3 ja SO2 kontsentratsioone. Mul üks mõte oli, et valida need näitajad. (https://airindex.eea.europa.eu/AQI/index.html#)
+
+| Pollutant | Index level |  |         |      |           |                |
+| --------- | ----------- |--| --------| ---- | --------- | -------------- |
+|           | Good | Fair | Moderate | Poor   | Very poor | Extremely poor |
+| Particles less than 2.5 µm (PM2.5) | 0-5 | 6-15 | 16-50 |	51-90 |	91-140 |	>140 | 
+| Particles less than 10 µm (PM10) |	0-15 |	16-45 |	46-120 |	121-195 |	196-270 |	>270 |
+| Ozone (O3) |	0-60 |	61-100 |	101-120 |	121-160 |	161-180 |	>180 |
+| Nitrogen dioxide (NO2) |	0-10 |	11-25 |	26-60 |	61-100 |	101-150 |	>150 |
+| Sulphur dioxide (SO2) |	0-20 |	21-40 |	41-125 |	126-190 |	191-275 |	>275 |

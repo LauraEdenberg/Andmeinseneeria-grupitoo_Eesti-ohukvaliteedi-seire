@@ -37,6 +37,7 @@ Euroopa õhukvaliteedi indeksi arvutamiseks kasutatakse PM10, PM2.5, NO2, O3 ja 
 2. Näitajate piirmäärade ületamise sagedus (nt kuus, aastas)
 3. Hooajalisuse indeks
 4. Linnade võrdlus
+5. Hinnang viimase üles laetud tunni õhukvaliteedile
 
 ## Andmeallikad
 

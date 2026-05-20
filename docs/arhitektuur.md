@@ -11,7 +11,7 @@ Milline on õhukvaliteedi dünaamika Eesti suurimates linnades (Tallinn, Tartu, 
 ## Mõõdikud
 
 1. Päevane näitajate kõikumine (min/max + aeg)
-2. Näitajate piirmäärade ületamise sagedus (nt kuus, aastas)
+2. Näitajate piirväärtuste ületamise sagedus (nt kuus, aastas)
 3. Hooajalisuse indeks
 4. Linnade võrdlus
 5. Hinnang viimase üles laetud tunni õhukvaliteedile
@@ -19,7 +19,6 @@ Milline on õhukvaliteedi dünaamika Eesti suurimates linnades (Tallinn, Tartu, 
 6. Saasteainete keskmised väärtused linnati
 7. Piirväärtuste ületamise arv mingis ajaühikus (seadus määrab ületamiseks erinevad keskmistamise perioodid)
 8. Domineeriv saasteaine eri linnades (st milline on European Air Quality Index’i määraja)
-
 
 ## Andmeallikad
 
@@ -72,13 +71,23 @@ flowchart LR
 
 Projekt kasutab ainult avalikke õhukvaliteediandmeid. Isikuandmeid ei koguta. Andmebaasi kasutajanimi ja parool tulevad .env failist. Päris .env faili ei tohi reposse lisada.
 
-### Lisainfo
+## Lisainfo
 
-Allikast saadavad õhukvaliteedi näitajad:
+Definitsioonide allikas https://www.riigiteataja.ee/akt/122122018007#para47lg1
+
+Õhukvaliteedi piirväärtus on saasteaine lubatav kogus välisõhu ruumalaühikus või pinnaühikule sadestunud saasteaine lubatav kogus, mis on kehtestatud teaduslike andmete alusel ning mis nimetatud koguse ületamise korral tuleb saavutada kindlaksmääratud aja jooksul ja mida edaspidi ei tohi enam ületada. Piirväärtuse kehtestamise eesmärk on vältida, ennetada või vähendada saasteaine ebasoodsat mõju inimese tervisele või keskkonnale.
+
+Õhukvaliteedi sihtväärtus on saasteaine kogus välisõhu ruumalaühikus või pinnaühikule sadestunud saasteaine kogus, mis tuleb nimetatud koguse ületamise korral saavutada asjakohaste meetmetega, mis ei too kaasa ebaproportsionaalselt suuri kulutusi, kas kindlaksmääratud aja jooksul või võimalikult kiiresti ja mille eesmärk on parandada õhukvaliteeti ja vältida või vähendada ebasoodsat mõju inimese tervisele ja keskkonnale.
+
+Õhukvaliteedi kriitiline tase on saasteaine kogus välisõhu ruumalaühikus või pinnaühikule sadestunud saasteaine kogus, mis on kehtestatud teaduslike andmete alusel ja mille ületamisel võib tõenäoliselt ilmneda vahetu oluline ebasoodne mõju ökosüsteemile või selle osale, välja arvatud inimesele.
+
+Õhukvaliteedi häiretase on õhukvaliteedi piirväärtusest kõrgem saasteaine kogus välisõhu ruumalaühikus või pinnaühikule sadestunud saasteaine kogus, mille ületamisel lühiajaline kokkupuude saastatud õhuga kujutab ohtu inimeste tervisele ja mille ületamise korral tuleb viivitamata rakendada kaitsemeetmeid.
+
+OpenAQ-st saadavad õhukvaliteedi näitajad:
 - CO (µg/m³)
 - NO₂ (µg/m³)
 - O₃ (µg/m³)
-- PM2.5 (µg/m³) - see näitaja on Tallinna andmetest puudu (mulle tundub, et Õismäel mõõdetakse PM2.5 ka)
+- PM2.5 (µg/m³) 
 - PM10 (µg/m³)
 - SO₂ (µg/m³)
   

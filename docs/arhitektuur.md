@@ -64,7 +64,7 @@ flowchart LR
 | Risk | Mõju | Maandus |
 |------|------|---------|
 |API andmed pole stabiilsed või puuduvad osad| Andmevoog katkeb| Andmekvaliteedi testid |
-| [Risk 2] | [Mis juhtub?] | [Kuidas maandad?] |
+|Õhukvaliteeti mõõtev sensor vahetatakse välja ja uus sensor saab uue id| Andmed ei uuene | Andmekvaliteedi testidega |
 | [Risk 3] | [Mis juhtub?] | [Kuidas maandad?] |
 
 ## Privaatsus ja turve

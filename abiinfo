@@ -1,0 +1,31 @@
+Tartu
+  location id: 10624
+  sensor id:
+    CO     35301
+    NO2    35307
+    O3     35308
+    PM10   35316
+    PM2.5  35347
+    SO2    35358
+
+Õismäe
+  location id: 8087
+  sensor id:
+    CO     23440
+    NO2    23441
+    O3     23444
+    PM10   23447
+    PM2.5  23448
+    SO2    23449
+
+Narva
+  location id: 10634
+  sensor id:
+    CO     11438903
+    NO2    8613252
+    O3     8613163
+    PM10   8613350
+    PM2.5  8613075
+    SO2    8613273
+
+              

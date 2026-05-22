@@ -10,7 +10,7 @@ Milline on õhukvaliteedi dünaamika Eesti suurimates linnades (Tallinn, Tartu, 
 
 ## Mõõdikud
 
-> valime 3 peamist mõõdikut (max 4), millele keskenduda. Nt 2,4,6 tundub hea variant.
+> valime 3 peamist mõõdikut, millele keskenduda. Nt 2,4,6 tundub hea variant.
 1. Päevane näitajate kõikumine (min/max + aeg)
 2. Näitajate piirväärtuste ületamise sagedus (nt kuus, aastas)
 3. Hooajalisuse indeks
@@ -63,9 +63,9 @@ flowchart LR
 
 | Risk | Mõju | Maandus |
 |------|------|---------|
-|API andmed pole stabiilsed või puuduvad osad| Andmevoog katkeb| Andmekvaliteedi testid |
+|API andmed pole stabiilsed või puuduvad osad| Andmevoog katkeb, dashboard näitab puudulikke andmeid | Andmekvaliteedi testid, logid, fallback viimase eduka laadimise andmetele |
 |Õhukvaliteeti mõõtev sensor vahetatakse välja ja uus sensor saab uue id| Andmed ei uuene | Andmekvaliteedi testidega |
-| [Risk 3] | [Mis juhtub?] | [Kuidas maandad?] |
+|API päringute limiidid või katkestused| Andmete laadimine ebaõnnestub, scheduler jääb tsüklisse | Retry loogika, scheduler alertid |
 
 ## Privaatsus ja turve
 

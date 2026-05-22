@@ -69,7 +69,8 @@ flowchart LR
 
 ## Privaatsus ja turve
 
-Projekt kasutab ainult avalikke õhukvaliteediandmeid. Isikuandmeid ei töödelda. Andmebaasi ligipääsuandmed hoitakse .env failis. .env faili ei lisata GitHub reposse vaid see lisatakse .gitignore faili.
+Projekt kasutab ainult avalikke õhukvaliteediandmeid. Isikuandmeid ei töödelda. 
+Andmebaasi ja API võtmete ligipääsuandmed hoitakse .env failis, mida ei lisata GitHubi (fail on kirjas .gitignore failis).
 
 ## Lisainfo
 

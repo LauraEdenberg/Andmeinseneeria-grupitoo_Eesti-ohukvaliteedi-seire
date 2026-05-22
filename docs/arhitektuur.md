@@ -10,12 +10,12 @@ Milline on õhukvaliteedi dünaamika Eesti suurimates linnades (Tallinn, Tartu, 
 
 ## Mõõdikud
 
+> valime 3 peamist mõõdikut (max 4), millele keskenduda. Nt 2,4,6 tundub hea variant.
 1. Päevane näitajate kõikumine (min/max + aeg)
 2. Näitajate piirväärtuste ületamise sagedus (nt kuus, aastas)
 3. Hooajalisuse indeks
-4. Linnade võrdlus
+4. Linnade võrdlus- võrreldakse linnade keskmisi saastetasemeid ja ületamiste arvu
 5. Hinnang viimase üles laetud tunni õhukvaliteedile
-
 6. Saasteainete keskmised väärtused linnati
 7. Piirväärtuste ületamise arv mingis ajaühikus (seadus määrab ületamiseks erinevad keskmistamise perioodid)
 8. Domineeriv saasteaine eri linnades (st milline on European Air Quality Index’i määraja)
@@ -69,7 +69,7 @@ flowchart LR
 
 ## Privaatsus ja turve
 
-Projekt kasutab ainult avalikke õhukvaliteediandmeid. Isikuandmeid ei koguta. Andmebaasi kasutajanimi ja parool tulevad .env failist. Päris .env faili ei tohi reposse lisada.
+Projekt kasutab ainult avalikke õhukvaliteediandmeid. Isikuandmeid ei töödelda. Andmebaasi ligipääsuandmed hoitakse .env failis. .env faili ei lisata GitHub reposse vaid see lisatakse .gitignore faili.
 
 ## Lisainfo
 

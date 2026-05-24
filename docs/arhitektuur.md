@@ -26,7 +26,7 @@ flowchart LR
     %% Staatilised dimensioonid
     I[Staatiline asukohadimensioon] --> B[Python ingest]
     J[Staatiline saasteainedimensioon] --> B
-    K[Piirväärtused (Eesti/EU)] --> B
+    K[Piirväärtused Eesti/EU] --> B
 
     %% Dünaamiline allikas
     A[OpenAQ API] --> B

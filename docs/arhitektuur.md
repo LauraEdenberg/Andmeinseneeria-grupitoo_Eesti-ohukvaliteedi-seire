@@ -23,16 +23,46 @@ Kuidas erineb õhukvaliteet Eesti suuremates linnades (Tallinna, Tartu, Narva) n
 
 ```mermaid
 flowchart LR
-    source[Andmeallikas] --> ingest[Sissevõtt]
-    ingest --> staging[(staging)]
-    staging --> transform[Transformatsioon]
-    transform --> mart[(mart)]
-    mart --> dashboard[Näidikulaud]
-    mart --> quality[Andmekvaliteedi testid]
-    scheduler[Scheduler] --> ingest
+
+    %% DIMENSIONS
+    seed_loc[Staatiline asukohadimensioon] --> dim_loc[(mart.dim_location)]
+    seed_poll[Staatiline saasteainedimensioon] --> dim_poll[(mart.dim_pollutant)]
+    seed_limit[Piirväärtused Riigiteataja / EU] --> dim_limit[(mart.dim_limit)]
+
+    %% INGEST
+    scheduler[Cron scheduler] --> ingest[Python ingest]
+    api[OpenAQ API] --> ingest
+
+    %% STAGING
+    ingest --> staging[(staging.openaq_raw)]
+
+    %% TRANSFORM
+    staging --> transform[SQL transformatsioon]
+
+    %% FACT TABLE
+    transform --> fact[(mart.fact_air_quality)]
+
+    %% DIMENSION LINKS
+    dim_loc --> fact
+    dim_poll --> fact
+    dim_limit --> fact
+
+    %% BUSINESS METRICS
+    fact --> minmax[(mart.daily_min_max)]
+    fact --> exceed[(mart.exceedances)]
+    fact --> aqi[(mart.aqi_determining_pollutant)]
+    fact --> compare[(mart.city_comparison)]
+
+    %% QUALITY
+    transform --> quality[(quality.test_results)]
+
+    %% DASHBOARD
+    minmax --> dashboard[Superset näidikulaud]
+    exceed --> dashboard
+    aqi --> dashboard
+    compare --> dashboard
 ```
 
-> Täpsusta diagrammi vastavalt oma projektile — lisa rohkem andmeallikaid, mudeleid või teenuseid.
 
 ## Andmebaasi kihid
 

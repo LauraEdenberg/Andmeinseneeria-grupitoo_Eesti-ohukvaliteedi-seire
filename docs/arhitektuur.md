@@ -67,6 +67,24 @@ flowchart LR
 Projekt kasutab ainult avalikke õhukvaliteediandmeid. Isikuandmeid ei töödelda. 
 Andmebaasi ja API võtmete ligipääsuandmed hoitakse .env failis, mida ei lisata GitHubi (fail on kirjas .gitignore failis).
 
+## API ühenduse testimine
+
+```bash
+# 1. Klooni repo ja liigu kausta
+git clone <repo-url>
+cd <projekti-kaust>
+
+# 2. Kopeeri keskkonnamuutujad
+cp .env.example .env
+# Muuda .env failis OpenAQ API key
+
+# 3. Käivita teenused
+docker compose up -d --build
+
+# 4. Käivita testscript andmete päringu testimiseks
+docker compose exec pipeline python scripts/data_from_api.py
+```
+
 ## Lisainfo
 
 Definitsioonide allikas https://www.riigiteataja.ee/akt/122122018007#para47lg1

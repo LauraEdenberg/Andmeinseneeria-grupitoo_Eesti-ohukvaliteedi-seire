@@ -23,44 +23,17 @@ Kuidas erineb õhukvaliteet Eesti suuremates linnades (Tallinna, Tartu, Narva) n
 
 ```mermaid
 flowchart LR
+    I[Staatilised dimensioonid] --> B[Python ingest]
+    A[OpenAQ API] --> B
+    H[Cron scheduler] --> B
 
-    %% DIMENSIONS
-    seed_loc[Staatiline asukohadimensioon] --> dim_loc[(mart.dim_location)]
-    seed_poll[Staatiline saasteainedimensioon] --> dim_poll[(mart.dim_pollutant)]
-    seed_limit[Piirväärtused Riigiteataja / EU] --> dim_limit[(mart.dim_limit)]
+    B --> C[(PostgreSQL staging)]
+    C --> D[SQL transformatsioon]
 
-    %% INGEST
-    scheduler[Cron scheduler] --> ingest[Python ingest]
-    api[OpenAQ API] --> ingest
+    D --> E[(PostgreSQL mart)]
 
-    %% STAGING
-    ingest --> staging[(staging.openaq_raw)]
-
-    %% TRANSFORM
-    staging --> transform[SQL transformatsioon]
-
-    %% FACT TABLE
-    transform --> fact[(mart.fact_air_quality)]
-
-    %% DIMENSION LINKS
-    dim_loc --> fact
-    dim_poll --> fact
-    dim_limit --> fact
-
-    %% BUSINESS METRICS
-    fact --> minmax[(mart.daily_min_max)]
-    fact --> exceed[(mart.exceedances)]
-    fact --> aqi[(mart.aqi_determining_pollutant)]
-    fact --> compare[(mart.city_comparison)]
-
-    %% QUALITY
-    transform --> quality[(quality.test_results)]
-
-    %% DASHBOARD
-    minmax --> dashboard[Superset näidikulaud]
-    exceed --> dashboard
-    aqi --> dashboard
-    compare --> dashboard
+    E --> F[Superset näidikulaud]
+    E --> G[Andmekvaliteedi testid]
 ```
 
 

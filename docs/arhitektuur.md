@@ -23,7 +23,9 @@ Kuidas erineb õhukvaliteet Eesti suuremates linnades (Tallinna, Tartu, Narva) n
 
 ```mermaid
 flowchart LR
-    I[Staatilised dimensioonid] --> B[Python ingest]
+    I[Staatiline asukohadimensioon] --> B[Python ingest]
+    J[Staatiline saasteainedimensioon] --> B
+    K[Piirväärtused (Eesti/EU)] --> B
     A[OpenAQ API] --> B
     H[Cron scheduler] --> B
 

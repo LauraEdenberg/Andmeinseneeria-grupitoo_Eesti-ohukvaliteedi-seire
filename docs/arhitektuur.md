@@ -8,10 +8,9 @@ Kuidas erineb õhukvaliteet Eesti suuremates linnades (Tallinna, Tartu, Narva) n
 
 ## Mõõdikud
 
-> valime 3 peamist mõõdikut, millele keskenduda. Nt 2,4,6 tundub hea variant.
 1. Päevane näitajate kõikumine (min/max + aeg)
-7. Piirväärtuste ületamise arv mingis ajaühikus (seadus määrab ületamiseks erinevad keskmistamise perioodid)
-[8. Domineeriv saasteaine eri linnades (st milline on European Air Quality Index’i määraja)]
+2. Piirväärtuste ületamise arv mingis ajaühikus (seadus määrab ületamiseks erinevad keskmistamise perioodid)
+3. Domineeriv saasteaine eri linnades (st milline on European Air Quality Index’i määraja) (kui jõuame)
 
 ## Andmeallikad
 

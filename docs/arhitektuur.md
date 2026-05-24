@@ -4,9 +4,7 @@
 
 ## Äriküsimus
 
-Milline on õhukvaliteedi dünaamika Eesti suurimates linnades (Tallinn, Tartu, Narva) ja kas mõõdetud saasteainete tasemed ületavad kriitilisi piirmäärasid?
-
-Äkki nii selgem: Kuidas erineb õhukvaliteet Eesti suuremates linnades (Tallinna, Tartu, Narva) ning kui sageli ületavad peamised saasteained kehtestatud õhukvaliteedi piirväärtuseid? 
+Kuidas erineb õhukvaliteet Eesti suuremates linnades (Tallinna, Tartu, Narva) ning kui sageli ületavad peamised saasteained kehtestatud õhukvaliteedi piirväärtuseid? 
 
 ## Mõõdikud
 

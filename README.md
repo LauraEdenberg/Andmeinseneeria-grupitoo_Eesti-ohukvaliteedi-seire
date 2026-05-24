@@ -1,38 +1,38 @@
-# [GRUPI NIMI] — Eesti õhukvaliteedi seire
+# Eesti õhukvaliteedi seire
 
 ## Äriküsimus
 
-Milline on õhukvaliteedi dünaamika Eesti suurimates linnades (Tallinn, Tartu, Narva) ja kas see ületab kriitilisi piirmäärasid?
+Kuidas erineb õhukvaliteet Eesti suuremates linnades (Tallinna, Tartu, Narva) ning kui sageli ületavad peamised saasteained kehtestatud õhukvaliteedi piirväärtuseid? 
 
-Allikast saadavad õhukvaliteedi näitajad:
-- CO (µg/m³)
-- NO₂ (µg/m³)
-- O₃ (µg/m³)
-- PM2.5 (µg/m³) - see näitaja on Tallinna andmetest puudu
-- PM10 (µg/m³)
-- SO₂ (µg/m³)
-
-Piirväärtuste allikas: https://www.riigiteataja.ee/aktilisa/1060/3201/9012/KKM_m8_lisa1.pdf#
-
-[Kirjelda ühe-kahe lausega, millise andmetega seotud probleemi te lahendate ja kes sellest kasu saab.]
 
 **Mõõdikud:**
 
-1. Päevane näitajate kõikumine (min/max + aeg) 
-2. Näitajate piirmäärade ületamise sagedus (nt kuus, aastas)
-3. Hooajalisuse indeks
-4. Linnade võrdlus
+1. Päevane näitajate kõikumine (min/max + aeg)
+2. Piirväärtuste ületamise arv mingis ajaühikus (seadus määrab ületamiseks erinevad keskmistamise perioodid)
+3. Domineeriv saasteaine eri linnades (st milline on European Air Quality Index’i määraja) (kui jõuame)
 
 
 ## Arhitektuur
 
 ```mermaid
 flowchart LR
-    source[Andmeallikas] --> ingest[Sissevõtt]
-    ingest --> staging[(staging)]
-    staging --> transform[Transformatsioon]
-    transform --> mart[(mart)]
-    mart --> dashboard[Näidikulaud]
+     %% Staatilised dimensioonid
+    I[Staatiline asukohadimensioon] --> B[Python ingest]
+    J[Staatiline saasteainedimensioon] --> B
+    K[Piirväärtused Eesti/EU] --> B
+
+    %% Dünaamiline allikas
+    A[OpenAQ API] --> B
+    H[Cron scheduler] --> B
+
+    %% Andmevoog
+    B --> C[(PostgreSQL staging)]
+    C --> D[SQL transformatsioon]
+    D --> E[(PostgreSQL mart)]
+
+    %% Väljundid
+    E --> F[Superset näidikulaud]
+    E --> G[Andmekvaliteedi testid]
 ```
 
 Täpsem kirjeldus: [`docs/arhitektuur.md`](docs/arhitektuur.md)
@@ -41,18 +41,20 @@ Täpsem kirjeldus: [`docs/arhitektuur.md`](docs/arhitektuur.md)
 
 | Allikas | Tüüp | Ajas muutuv? | Roll |
 |---------|------|--------------|------|
-| [Andmeallika nimi] | [API / fail / andmebaas] | Jah, [iga tund / päevas / muu] | Põhiandmevoog |
-| [Teise allika nimi] | [seed / dim-tabel] | Ei, staatiline | Kõrvaltabel |
+| OpenAQ API | Avalik HTTP API | Jah, iga 1 tund, 2-3 tunnise viitega reaalajast | Põhiandmevoog |
+| mart.dim_location | Staatiline dimensioonitabel | Ei, staatiline | Asukohtade püsivad tunnused ja API päringu koordinaadid |
+| mart.dim_parameter | Staatiline dimensioonitabel | Ei, staatiline | Saasteainete püsivad tunnused |
+| mart.dim_limit | Staatiline dimensioonitabel | Ei, staatiline | Saasteainete piirväärtused Eestis/EUs |
 
 ## Stack
 
 | Komponent | Tööriist |
 |-----------|---------|
-| Sissevõtt | [Python / Airflow / muu] |
-| Transformatsioon | [SQL / dbt / muu] |
+| Sissevõtt | Python |
+| Transformatsioon | SQL |
 | Andmehoidla | PostgreSQL |
-| Näidikulaud | [Superset / Streamlit / muu] |
-| Orkestreerimine | [Airflow / cron / muu] |
+| Näidikulaud | Superset |
+| Orkestreerimine | cron |
 
 ## Käivitamine
 
@@ -72,8 +74,7 @@ docker compose up -d --build
 # docker compose exec pipeline python scripts/run_pipeline.py run-all
 ```
 
-Airflow (kui kasutatakse): http://localhost:8080 (kasutaja: airflow / parool: airflow)
-Näidikulaud: http://localhost:[PORT]
+Näidikulaud: http://localhost:8088
 
 ## Saladused ja konfiguratsioon
 
@@ -134,7 +135,7 @@ Testide tulemused: [kuhu salvestatakse / kuidas vaadata]
 
 | Nimi | Roll |
 |------|------|
-| [Nimi 1] | [Roll] |
-| [Nimi 2] | [Roll] |
-| [Nimi 3] | [Roll] |
-| [Nimi 4] | [Roll — vabatahtlik] |
+| Keit Prants | Andmeallika omanik |
+| Laura Edenberg | Transformatsioonide omanik |
+| Anni Burk | Kvaliteedi omanik |
+| Merje Pungits | Näidikulaua omanik |

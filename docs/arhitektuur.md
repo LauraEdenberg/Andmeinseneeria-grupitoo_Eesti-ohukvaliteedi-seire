@@ -48,7 +48,7 @@ flowchart LR
 | Kiht | Roll |
 |------|------|
 | `staging` | Hoiab allika andmeid töötlemata kujul. |
-| `mart` | Hoiab transformeeritud ja ärilogikat sisaldavaid tabeleid. |
+| `mart` | Hoiab transformeeritud ja äriloogikat sisaldavaid tabeleid. |
 | `quality` | Hoiab kvaliteeditestide tulemusi. |
 
 ## Tööjaotus
@@ -113,7 +113,7 @@ OpenAQ-st saadavad õhukvaliteedi näitajad:
   
 Piirväärtuste allikas: https://www.riigiteataja.ee/aktilisa/1060/3201/9012/KKM_m8_lisa1.pdf#
 
-Euroopa õhukvaliteedi indeksi arvutamiseks kasutatakse PM10, PM2.5, NO2, O3 ja SO2 kontsentratsioone. Mul üks mõte oli, et valida need näitajad. (https://airindex.eea.europa.eu/AQI/index.html#)
+Euroopa õhukvaliteedi indeksi arvutamiseks kasutatakse PM10, PM2.5, NO2, O3 ja SO2 kontsentratsioone. (https://airindex.eea.europa.eu/AQI/index.html#)
 
 | Pollutant | Index level |  |         |      |           |                |
 | --------- | ----------- |--| --------| ---- | --------- | -------------- |

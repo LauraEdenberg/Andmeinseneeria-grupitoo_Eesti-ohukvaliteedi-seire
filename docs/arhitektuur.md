@@ -1,7 +1,5 @@
 # Arhitektuur
 
-> **Juhend:** See fail on projektitöö esimese nädala väljund. Asenda kõik nurksulgudes plankid oma projekti tegeliku sisuga. Kustuta see juhendrida.
-
 ## Äriküsimus
 
 Kuidas erineb õhukvaliteet Eesti suuremates linnades (Tallinna, Tartu, Narva) ning kui sageli ületavad peamised saasteained kehtestatud õhukvaliteedi piirväärtuseid? 
@@ -16,51 +14,32 @@ Kuidas erineb õhukvaliteet Eesti suuremates linnades (Tallinna, Tartu, Narva) n
 
 | Allikas | Tüüp | Ajas muutuv? | Roll |
 |---------|------|--------------|------|
-| OpenAQ API | Avalik HTTP API | Jah, [iga X tundi / päeva] | Põhiandmevoog |
+| OpenAQ API | Avalik HTTP API | Jah, iga 1 tund, 2-3 tunnise viitega reaalajast | Põhiandmevoog |
 | mart.dim_location | Staatiline dimensioonitabel | Ei, staatiline | Asukohtade püsivad tunnused ja API päringu koordinaadid |
+| mart.dim_parameter | Staatiline dimensioonitabel | Ei, staatiline | Saasteainete püsivad tunnused |
+| mart.dim_limit | Staatiline dimensioonitabel | Ei, staatiline | Saasteainete piirväärtused Eestis/EUs |
 
 ## Andmevoog
 
 ```mermaid
 flowchart LR
+    %% Staatilised dimensioonid
+    I[Staatiline asukohadimensioon] --> B[Python ingest]
+    J[Staatiline saasteainedimensioon] --> B
+    K[Piirväärtused Eesti/EU] --> B
 
-    %% DIMENSIONS
-    seed_loc[Staatiline asukohadimensioon] --> dim_loc[(mart.dim_location)]
-    seed_poll[Staatiline saasteainedimensioon] --> dim_poll[(mart.dim_pollutant)]
-    seed_limit[Piirväärtused Riigiteataja / EU] --> dim_limit[(mart.dim_limit)]
+    %% Dünaamiline allikas
+    A[OpenAQ API] --> B
+    H[Cron scheduler] --> B
 
-    %% INGEST
-    scheduler[Cron scheduler] --> ingest[Python ingest]
-    api[OpenAQ API] --> ingest
+    %% Andmevoog
+    B --> C[(PostgreSQL staging)]
+    C --> D[SQL transformatsioon]
+    D --> E[(PostgreSQL mart)]
 
-    %% STAGING
-    ingest --> staging[(staging.openaq_raw)]
-
-    %% TRANSFORM
-    staging --> transform[SQL transformatsioon]
-
-    %% FACT TABLE
-    transform --> fact[(mart.fact_air_quality)]
-
-    %% DIMENSION LINKS
-    dim_loc --> fact
-    dim_poll --> fact
-    dim_limit --> fact
-
-    %% BUSINESS METRICS
-    fact --> minmax[(mart.daily_min_max)]
-    fact --> exceed[(mart.exceedances)]
-    fact --> aqi[(mart.aqi_determining_pollutant)]
-    fact --> compare[(mart.city_comparison)]
-
-    %% QUALITY
-    transform --> quality[(quality.test_results)]
-
-    %% DASHBOARD
-    minmax --> dashboard[Superset näidikulaud]
-    exceed --> dashboard
-    aqi --> dashboard
-    compare --> dashboard
+    %% Väljundid
+    E --> F[Superset näidikulaud]
+    E --> G[Andmekvaliteedi testid]
 ```
 
 
@@ -69,7 +48,7 @@ flowchart LR
 | Kiht | Roll |
 |------|------|
 | `staging` | Hoiab allika andmeid töötlemata kujul. |
-| `mart` | Hoiab transformeeritud ja ärilogikat sisaldavaid tabeleid. |
+| `mart` | Hoiab transformeeritud ja äriloogikat sisaldavaid tabeleid. |
 | `quality` | Hoiab kvaliteeditestide tulemusi. |
 
 ## Tööjaotus
@@ -94,6 +73,24 @@ flowchart LR
 Projekt kasutab ainult avalikke õhukvaliteediandmeid. Isikuandmeid ei töödelda. 
 Andmebaasi ja API võtmete ligipääsuandmed hoitakse .env failis, mida ei lisata GitHubi (fail on kirjas .gitignore failis).
 
+## API ühenduse testimine
+
+```bash
+# 1. Klooni repo ja liigu kausta
+git clone <repo-url>
+cd <projekti-kaust>
+
+# 2. Kopeeri keskkonnamuutujad
+cp .env.example .env
+# Muuda .env failis OpenAQ API key
+
+# 3. Käivita teenused
+docker compose up -d --build
+
+# 4. Käivita testscript andmete päringu testimiseks
+docker compose exec pipeline python scripts/data_from_api.py
+```
+
 ## Lisainfo
 
 Definitsioonide allikas https://www.riigiteataja.ee/akt/122122018007#para47lg1
@@ -116,7 +113,7 @@ OpenAQ-st saadavad õhukvaliteedi näitajad:
   
 Piirväärtuste allikas: https://www.riigiteataja.ee/aktilisa/1060/3201/9012/KKM_m8_lisa1.pdf#
 
-Euroopa õhukvaliteedi indeksi arvutamiseks kasutatakse PM10, PM2.5, NO2, O3 ja SO2 kontsentratsioone. Mul üks mõte oli, et valida need näitajad. (https://airindex.eea.europa.eu/AQI/index.html#)
+Euroopa õhukvaliteedi indeksi arvutamiseks kasutatakse PM10, PM2.5, NO2, O3 ja SO2 kontsentratsioone. (https://airindex.eea.europa.eu/AQI/index.html#)
 
 | Pollutant | Index level |  |         |      |           |                |
 | --------- | ----------- |--| --------| ---- | --------- | -------------- |

@@ -5,7 +5,7 @@ See fail on näidis projektitöö teise nädala väljundiks. Enda projektis uuen
 ## Mis on valmis
 
 - Docker Compose käivitab PostgreSQL-i, töövoo konteineri, scheduleri ja näidikulaua.
-- OpenAQ API-st saab kätte valitud Eesti asulate tunnipõhise prognoosi.
+- OpenAQ API-st saab kätte valitud saasteainete tunni keskmistatud kontsentratsiooni.
 - Asukohad on eraldi staatilises `mart.dim_location` dimensioonitabelis.
 - Andmed liiguvad `staging` kihist `mart` kihti.
 - `mart` kihis arvutatakse tunnipõhine sobivuse skoor ja 3-tunnised ajaaknad.

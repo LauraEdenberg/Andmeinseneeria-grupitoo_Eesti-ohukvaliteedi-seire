@@ -69,9 +69,17 @@ ON CONFLICT (sensor_id) DO UPDATE SET
     unit = EXCLUDED.unit;
 
 
-INSERT INTO mart.dim_parameter_limits
-    (parameter_name, limit_type, limit_value, unit, averaging_period, 
-     averaging_period_hours, allowed_exceedances_per_year, legal_basis, valid_from)
+INSERT INTO mart.dim_parameter_limits (
+    parameter_name,
+    limit_type,
+    limit_value,
+    unit,
+    averaging_period,
+    averaging_period_hours,
+    allowed_exceedances_per_year,
+    legal_basis,
+    valid_from
+)
 VALUES
     ('so2',  'limit', 350,   'µg/m³', '1_hour',      1,    24,   'EU 2008/50/EÜ', '2010-01-01'),
     ('so2',  'limit', 125,   'µg/m³', '24_hours',    24,   3,    'EU 2008/50/EÜ', '2010-01-01'),

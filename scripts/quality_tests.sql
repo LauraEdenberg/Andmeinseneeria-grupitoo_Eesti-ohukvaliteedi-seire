@@ -59,7 +59,7 @@ WITH test_cases AS (
         END AS failed_rows,
     'APIst andmete laadimisel peab olema vähemalt üks rida.' AS message
 
-
+#siia veel teste
 )
 
 INSERT INTO quality.test_results (

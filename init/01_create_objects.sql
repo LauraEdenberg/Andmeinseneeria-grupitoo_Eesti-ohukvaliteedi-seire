@@ -58,10 +58,9 @@ CREATE TABLE IF NOT EXISTS staging.pipeline_runs (
     message text
 );
 
--- 
+-- faktitabel/mõõtmistulemus
 CREATE TABLE IF NOT EXISTS staging.parameter_values_raw (
-    run_id uuid NOT NULL REFERENCES staging.pipeline_runs (run_id),
-    location_id text NOT NULL REFERENCES mart.dim_location (location_id), 
+    run_id uuid NOT NULL REFERENCES staging.pipeline_runs (run_id), 
     sensor_id text NOT NULL REFERENCES mart.dim_sensor (sensor_id),
     period_from timestamptz NOT NULL,
     period_to timestamptz NOT NULL,

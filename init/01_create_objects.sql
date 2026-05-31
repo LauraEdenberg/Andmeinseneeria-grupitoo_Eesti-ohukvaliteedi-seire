@@ -85,5 +85,5 @@ CREATE TABLE IF NOT EXISTS mart.fact_measurement (
     has_flags boolean,
     percent_complete numeric(5, 2),
     run_id uuid NOT NULL REFERENCES staging.pipeline_runs (run_id),
-    PRIMARY KEY (sensor_id, period_from),
+    PRIMARY KEY (sensor_id, period_from)
 );

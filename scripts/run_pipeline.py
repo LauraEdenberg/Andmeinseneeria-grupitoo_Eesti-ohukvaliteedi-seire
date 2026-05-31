@@ -325,19 +325,20 @@ def fetch_value(conn, query: str):
         return cur.fetchone()[0]
 
 
-#def transform() -> None:
-    #conn = get_connection()
-    #try:
-        #seed_dimensions(conn)
-        #execute_sql_file(conn, TRANSFORM_SQL)
+def transform() -> None:
+    conn = get_connection()
+    try:
+        seed_dimensions(conn)
+        execute_sql_file(conn, TRANSFORM_SQL)
         #daily_rows = fetch_value(conn, "SELECT COUNT(*) FROM mart.daily_weather_summary;")
         #latest_rows = fetch_value(conn, "SELECT COUNT(*) FROM mart.latest_daily_weather_summary;")
         #window_rows = fetch_value(conn, "SELECT COUNT(*) FROM mart.latest_outdoor_activity_windows;")
         #log(f"Transformatsioon valmis. Päevaseid koondridu kokku: {daily_rows}.")
         #log(f"Viimase laadimise päevaseid koondridu: {latest_rows}.")
         #log(f"Viimase laadimise 3-tunniseid ajaaknaid: {window_rows}.")
-    #finally:
-        #conn.close()
+        log("Transformatsioon valmis.")
+    finally:
+        conn.close()
 
 
 def run_quality_tests() -> None:
@@ -490,7 +491,7 @@ def reset_data() -> None:
 
 def run_all() -> None:
     ingest()
-    #transform()
+    transform()
     run_quality_tests()
     log("Kogu töövoog õnnestus.")
 
@@ -511,8 +512,7 @@ def main() -> int:
         if args.command == "ingest":
             ingest()
         elif args.command == "transform":
-            #transform()
-            pass
+            transform()
         elif args.command == "test":
             run_quality_tests()
         elif args.command == "check":

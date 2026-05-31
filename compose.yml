@@ -56,7 +56,7 @@ services:
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       DB_NAME: ${POSTGRES_DB}
       PIPELINE_CRON: "${PIPELINE_CRON:-0 * * * *}"
-      RUN_ON_STARTUP: ${RUN_ON_STARTUP:-false}
+      RUN_ON_STARTUP: ${RUN_ON_STARTUP:-true}
     depends_on:
       db:
         condition: service_healthy

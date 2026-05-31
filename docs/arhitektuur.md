@@ -23,23 +23,81 @@ Kuidas erineb õhukvaliteet Eesti suuremates linnades (Tallinna, Tartu, Narva) n
 
 ```mermaid
 flowchart LR
-    %% Staatilised dimensioonid
-    I[Staatiline asukohadimensioon] --> B[Python ingest]
-    J[Staatiline saasteainedimensioon] --> B
-    K[Piirväärtused Eesti/EU] --> B
+    %% Staatilised dimensiooni-allikad
+    src_loc["staatiline asukoha-dimensioon"]
+    src_param["staatiline parameetri-dimensioon"]
+    src_sensor["staatiline sensori-dimensioon"]
+    src_limits["staatiline piirväärtuste dimensioon"]
+    src_date["staatiline kuupäeva-dimensioon"]
 
-    %% Dünaamiline allikas
-    A[OpenAQ API] --> B
-    H[Cron scheduler] --> B
+    %% Dimensioonitabelid (mart)
+    dim_loc[("mart.dim_location")]
+    dim_param[("mart.dim_parameter")]
+    dim_sensor[("mart.dim_sensor")]
+    dim_limits[("mart.dim_parameter_limits")]
+    dim_date[("mart.dim_date")]
 
-    %% Andmevoog
-    B --> C[(PostgreSQL staging)]
-    C --> D[SQL transformatsioon]
-    D --> E[(PostgreSQL mart)]
+    %% Allikas → dimensioon
+    src_loc --> dim_loc
+    src_param --> dim_param
+    src_sensor --> dim_sensor
+    src_limits --> dim_limits
+    src_date --> dim_date
 
-    %% Väljundid
-    E --> F[Superset näidikulaud]
-    E --> G[Andmekvaliteedi testid]
+    %% Ingest
+    api["OpenAQ API"]
+    cron["Cron scheduler"]
+    ingest["Python ingest"]
+
+    api --> ingest
+    cron -.-> ingest
+    dim_sensor --> ingest
+
+    %% Staging
+    raw[("staging.parameter_values_raw")]
+    runs[("staging.pipeline_runs")]
+
+    ingest --> raw
+    ingest --> runs
+
+    %% Transformatsioon
+    sql["SQL transformatsioon"]
+    raw --> sql
+
+    %% Fakti- ja tulemustabelid
+    fact[("mart.fact_measurement")]
+    minmax[("mart.parameter_min_max")]
+    exceed[("mart.limit_exceedances")]
+    quality[("quality.test_results")]
+
+    sql --> fact
+    sql --> minmax
+    sql --> exceed
+    sql --> quality
+
+    %% Dimensioonid → faktitabel
+    dim_loc --> fact
+    dim_param --> fact
+    dim_sensor --> fact
+    dim_limits --> fact
+    dim_date --> fact
+
+    %% Esitluskiht
+    superset["Superset näidikulaud"]
+    fact --> superset
+    minmax --> superset
+    exceed --> superset
+
+    %% Värvid
+    classDef green fill:#EAF3DE,stroke:#3B6D11,color:#173404;
+    classDef red fill:#FCEBEB,stroke:#A32D2D,color:#501313;
+    classDef blue fill:#E6F1FB,stroke:#185FA5,color:#042C53;
+    classDef plain fill:#F1EFE8,stroke:#5F5E5A,color:#2C2C2A;
+
+    class dim_loc,dim_param,dim_sensor,dim_limits,dim_date,fact,minmax,exceed green;
+    class raw,runs red;
+    class quality blue;
+    class src_loc,src_param,src_sensor,src_limits,src_date,api,cron,ingest,sql,superset plain;
 ```
 
 

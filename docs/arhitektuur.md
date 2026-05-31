@@ -18,6 +18,7 @@ Kuidas erineb õhukvaliteet Eesti suuremates linnades (Tallinna, Tartu, Narva) n
 | mart.dim_location | Staatiline dimensioonitabel | Ei, staatiline | Asukohtade püsivad tunnused ja API päringu koordinaadid |
 | mart.dim_parameter | Staatiline dimensioonitabel | Ei, staatiline | Saasteainete püsivad tunnused |
 | mart.dim_limit | Staatiline dimensioonitabel | Ei, staatiline | Saasteainete piirväärtused Eestis/EUs |
+| mart.dim_date | Staatiline dimensioonitabel | Ei, staatiline | Kuupäevad |
 
 ## Andmevoog
 <img width="1899" height="760" alt="image" src="https://github.com/user-attachments/assets/8ddf3900-44c1-4d5e-9757-648aec1cc467" />

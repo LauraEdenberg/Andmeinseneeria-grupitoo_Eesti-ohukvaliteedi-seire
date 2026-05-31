@@ -14,7 +14,7 @@ write_export() {
 }
 
 rm -f "$ENV_FILE"
-for name in DB_HOST DB_PORT DB_USER DB_PASSWORD DB_NAME OPENAQ_API_KEY; do
+for name in DB_HOST DB_PORT DB_USER DB_PASSWORD DB_NAME SOURCE_API_URL OPENAQ_API_KEY BACKFILL_DAYS; do
     write_export "$name"
 done
 

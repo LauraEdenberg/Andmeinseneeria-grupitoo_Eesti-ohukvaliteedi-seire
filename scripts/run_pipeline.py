@@ -20,7 +20,7 @@ import requests
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-INIT_SQL = SCRIPT_DIR.parent / "init" / "01_create_objects.sql"
+
 DIMENSIONS_SQL = SCRIPT_DIR / "01_seed_dimensions.sql"
 TRANSFORM_SQL = SCRIPT_DIR / "transform.sql" #siia vaja lisada õige transform scripti faili nimi
 QUALITY_SQL = SCRIPT_DIR / "quality_tests.sql"
@@ -47,8 +47,7 @@ def get_connection():
         dbname=get_env("DB_NAME", "praktikum"),
     )
 
-def init_db(conn) -> None:
-    execute_sql_file(conn, INIT_SQL)
+
 
 def seed_dimensions(conn) -> None:
     execute_sql_file(conn, DIMENSIONS_SQL)
@@ -253,7 +252,6 @@ def ingest() -> uuid.UUID:
     datetime_from, datetime_to = get_time_window()
     conn = get_connection()
     try:
-        init_db(conn)
         seed_dimensions(conn)
         sensors = load_active_sensors(conn)
         insert_pipeline_run(

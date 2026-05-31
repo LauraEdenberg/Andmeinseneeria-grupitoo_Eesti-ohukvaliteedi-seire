@@ -37,6 +37,7 @@ services:
       db:
         condition: service_healthy
     volumes:
+      - ./init:/app/init
       - ./scripts:/app/scripts
     working_dir: /app
     tty: true

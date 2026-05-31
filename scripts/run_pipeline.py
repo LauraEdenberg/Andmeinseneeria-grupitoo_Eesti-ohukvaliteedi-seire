@@ -206,10 +206,7 @@ def ingest_sensor_data(
 
     with conn.cursor() as cur:
         for r in rows:
-            for k, v in r.items():
-                if isinstance(v, dict):
-                    print("DICT FOUND:", k, v)
-            
+                        
             cur.execute("""
                 INSERT INTO staging.parameter_values_raw (
                     run_id,

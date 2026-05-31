@@ -74,4 +74,16 @@ CREATE TABLE IF NOT EXISTS staging.parameter_values_raw (
     UNIQUE (sensor_id, period_from) --lisasin unikaalsuse piirangu, et sama sensori sama perioodi andmeid ei saaks topelt sisestada, vaid uuendatakse olemasolevat rida
 );    
 
-
+-- mõõtmistulemuste faktitabel, milles on viited dimensioonidele
+CREATE TABLE IF NOT EXISTS mart.fact_measurement (
+    sensor_id text NOT NULL REFERENCES mart.dim_sensor (sensor_id),
+    parameter_name text NOT NULL REFERENCES mart.dim_parameter (parameter_name),
+    location_id text NOT NULL REFERENCES mart.dim_location (location_id),
+    period_from timestamptz NOT NULL,
+    period_to timestamptz NOT NULL,
+    value numeric(12, 6),
+    has_flags boolean,
+    percent_complete numeric(5, 2),
+    run_id uuid NOT NULL REFERENCES staging.pipeline_runs (run_id),
+    PRIMARY KEY (sensor_id, period_from),
+);

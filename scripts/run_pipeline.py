@@ -221,9 +221,13 @@ def ingest_sensor_data(
                     source_url
                 )
                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-                ON CONFLICT (run_id, sensor_id, period_from)
+                ON CONFLICT (sensor_id, period_from)
                 DO UPDATE SET
+                    period_to = EXCLUDED.period_to,
+                    period_interval = EXCLUDED.period_interval,
                     value = EXCLUDED.value,
+                    has_flags = EXCLUDED.has_flags,
+                    percent_complete = EXCLUDED.percent_complete,
                     fetched_at = EXCLUDED.fetched_at,
                     source_url = EXCLUDED.source_url
             """, (

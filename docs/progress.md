@@ -1,26 +1,27 @@
 # Edenemisraport
 
-See fail on näidis projektitöö teise nädala väljundiks. Enda projektis uuenda seda lühidalt iga esitamise eel.
-
 ## Mis on valmis
 
 - Docker Compose käivitab PostgreSQL-i, töövoo konteineri, scheduleri ja näidikulaua.
-- OpenAQ API-st saab kätte valitud saasteainete tunni keskmistatud kontsentratsiooni.
-- Asukohad on eraldi staatilises `mart.dim_location` dimensioonitabelis.
+- OpenAQ API-st saab kätte valitud sensorite saasteainete tunni (keskmistatud?) kontsentratsiooni.
+- Asukohad, sensorid, saasteained ja nende piirmäärad on eraldi staatilistes dimensioonitabelites.
 - Andmed liiguvad `staging` kihist `mart` kihti.
+- Andmekvaliteeditestid õnnestuvad ja on "passed" seisus.
+
+  [
 - `mart` kihis arvutatakse tunnipõhine sobivuse skoor ja 3-tunnised ajaaknad.
-- Näidikulaud näitab parimaid ajaaknaid, sobivuse kalendrit, temperatuuri, sademeid, tuult ja kvaliteediteste.
-- Scheduler käivitab töövoo vaikimisi iga tunni alguses ning näidikulaud värskendab brauserivaadet automaatselt.
+- Näidikulaud näitab ...
+- Scheduler käivitab töövoo vaikimisi iga tunni alguses ning näidikulaud värskendab brauserivaadet automaatselt.]
 
 ## Järgmised sammud
 
-- Kontrollida, kas skoori kaalud vastavad äriküsimusele piisavalt hästi.
-- Lisada vajadusel teine ilmamuutuja või muuta asukohadimensiooni ridu.
+- Lisada transformatsioonid vastavalt äriküsimusele.
+- Kontrollida, kas andmed vastavad äriküsimusele.
 - Täpsustada README järelduste ja piirangute osa.
 
 ## Mis takistab
 
-- Kui Open-Meteo API pole ajutiselt kättesaadav, tuleb laadimine hiljem uuesti käivitada.
+- Kui OpenAQ API pole ajutiselt kättesaadav, tuleb laadimine hiljem uuesti käivitada.
 - Kui port `8501` on hõivatud, tuleb `.env` failis muuta `DASHBOARD_PORT_HOST` väärtust.
 
 ## Kontrollpunkt

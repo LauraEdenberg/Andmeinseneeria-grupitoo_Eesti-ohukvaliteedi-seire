@@ -233,7 +233,7 @@ def ingest_sensor_data(
                 r.get("period", {}).get("datetimeTo", {}).get("utc"),
                 r.get("period", {}).get("interval"),
                 r.get("value"),
-                r.get("hasFlags"),
+                r.get("flagInfo", {}).get("hasFlags"),
                  r.get("coverage", {}).get("percentComplete"),
                 fetched_at,
                 source_url,
@@ -249,6 +249,7 @@ def ingest() -> uuid.UUID:
     datetime_from, datetime_to = get_time_window()
     conn = get_connection()
     try:
+        init_db(conn)
         seed_dimensions(conn)
         sensors = load_active_sensors(conn)
         insert_pipeline_run(
@@ -291,7 +292,16 @@ def ingest() -> uuid.UUID:
         return run_id
     except Exception as exc:
         conn.rollback()
-        update_pipeline_run(conn, run_id=run_id, status="error", message=str(exc))
+
+        try:
+            update_pipeline_run(
+                conn,
+                run_id=run_id,
+                status="error",
+                message=str(exc),
+            )
+        except Exception:
+            pass
         raise
     finally:
         conn.close()
@@ -475,13 +485,6 @@ def reset_data() -> None:
 
 
 def run_all() -> None:
-    conn = get_connection()
-    try:
-        init_db(conn)
-        seed_dimensions(conn)
-    finally:
-        conn.close()
-
     ingest()
     #transform()
     run_quality_tests()

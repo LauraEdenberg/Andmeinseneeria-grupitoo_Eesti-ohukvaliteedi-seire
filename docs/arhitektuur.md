@@ -20,6 +20,8 @@ Kuidas erineb õhukvaliteet Eesti suuremates linnades (Tallinna, Tartu, Narva) n
 | mart.dim_limit | Staatiline dimensioonitabel | Ei, staatiline | Saasteainete piirväärtused Eestis/EUs |
 
 ## Andmevoog
+<img width="1899" height="760" alt="image" src="https://github.com/user-attachments/assets/8ddf3900-44c1-4d5e-9757-648aec1cc467" />
+
 
 ```mermaid
 flowchart LR
@@ -79,8 +81,8 @@ flowchart LR
     dim_loc --> fact
     dim_param --> fact
     dim_sensor --> fact
-    dim_limits --> fact
     dim_date --> fact
+    dim_limits --> exceed
 
     %% Esitluskiht
     superset["Superset näidikulaud"]

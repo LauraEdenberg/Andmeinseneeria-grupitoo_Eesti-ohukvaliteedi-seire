@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS staging.parameter_values_raw (
     percent_complete numeric(5, 2), -- api päringu andmekval. näitaja, mida saame ka ise kasutada
     fetched_at timestamptz NOT NULL,
     source_url text NOT NULL,
-    PRIMARY KEY (run_id, sensor_id, period_from),
+    PRIMARY KEY (sensor_id, period_from), 
     UNIQUE (sensor_id, period_from) --lisasin unikaalsuse piirangu, et sama sensori sama perioodi andmeid ei saaks topelt sisestada, vaid uuendatakse olemasolevat rida
 );    
 

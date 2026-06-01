@@ -28,7 +28,7 @@ VALUES
     ('pm10', 'PM10',  'µg/m³', 'Peenosake läbimõõduga kuni 10 µm'),
     ('no2',  'NO₂',   'µg/m³', 'Lämmastikdioksiid'),
     ('o3',   'O₃',    'µg/m³', 'Osoon'),
-    ('so2',  'SO₂',   'µg/m³', 'Vääveldioksiid'),
+    ('so2',  'SO₂',   'µg/m³', 'Vääveldioksiid')
 ON CONFLICT (parameter_name) DO UPDATE SET
     display_name = EXCLUDED.display_name,
     default_unit = EXCLUDED.default_unit,

@@ -29,7 +29,6 @@ VALUES
     ('no2',  'NO₂',   'µg/m³', 'Lämmastikdioksiid'),
     ('o3',   'O₃',    'µg/m³', 'Osoon'),
     ('so2',  'SO₂',   'µg/m³', 'Vääveldioksiid'),
-    ('co',   'CO',    'µg/m³', 'Süsinikoksiid') -- vt ühik
 ON CONFLICT (parameter_name) DO UPDATE SET
     display_name = EXCLUDED.display_name,
     default_unit = EXCLUDED.default_unit,
@@ -43,21 +42,18 @@ INSERT INTO mart.dim_sensor (
 )
 VALUES
     -- Tartu
-    ('35301',    'co',   '10624', 'µg/m³'),
     ('35307',    'no2',  '10624', 'µg/m³'),
     ('35308',    'o3',   '10624', 'µg/m³'),
     ('35316',    'pm10', '10624', 'µg/m³'),
     ('35347',    'pm25', '10624', 'µg/m³'),
     ('35358',    'so2',  '10624', 'µg/m³'),
     -- Tallinn
-    ('23440',    'co',   '8087',  'µg/m³'),
     ('23441',    'no2',  '8087',  'µg/m³'),
     ('23444',    'o3',   '8087',  'µg/m³'),
     ('23447',    'pm10', '8087',  'µg/m³'),
     ('23448',    'pm25', '8087',  'µg/m³'),
     ('23449',    'so2',  '8087',  'µg/m³'),
     -- Narva
-    ('11438903', 'co',   '10634', 'µg/m³'),
     ('8613252',  'no2',  '10634', 'µg/m³'),
     ('8613163',  'o3',   '10634', 'µg/m³'),
     ('8613350',  'pm10', '10634', 'µg/m³'),
@@ -88,7 +84,6 @@ VALUES
     ('pm10', 'limit', 50,    'µg/m³', '24_hours',    24,   35,   'EU 2008/50/EÜ', '2005-01-01'),
     ('pm10', 'limit', 40,    'µg/m³', '1_year',      8760, NULL, 'EU 2008/50/EÜ', '2005-01-01'),
     ('pm25', 'limit', 25,    'µg/m³', '1_year',      8760, NULL, 'EU 2008/50/EÜ', '2015-01-01'),
-    ('co',   'limit', 10000, 'µg/m³', '8_hours_max', 8,    NULL, 'EU 2008/50/EÜ', '2005-01-01'),
     ('o3',   'target', 120,  'µg/m³', '8_hours_max', 8,    25,   'EU 2008/50/EÜ', '2010-01-01')
 ON CONFLICT DO NOTHING;
 

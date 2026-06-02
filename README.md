@@ -163,7 +163,7 @@ Projekt kontrollib järgmist:
 3. [Test 3 - nt: kuupäev jääb vahemikku 2020-2026]
 [Lisa rohkem, kui sul on]
 
-Testide tulemused: [kuhu salvestatakse / kuidas vaadata]
+Testide tulemused salvestatakse tabelisee quality.test_results.
 
 ## Projekti struktuur
 

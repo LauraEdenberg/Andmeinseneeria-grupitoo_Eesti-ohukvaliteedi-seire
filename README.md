@@ -21,21 +21,18 @@ flowchart LR
     src_param["staatiline parameetri-dimensioon"]
     src_sensor["staatiline sensori-dimensioon"]
     src_limits["staatiline piirväärtuste dimensioon"]
-    src_date["staatiline kuupäeva-dimensioon"]
 
     %% Dimensioonitabelid (mart)
     dim_loc[("mart.dim_location")]
     dim_param[("mart.dim_parameter")]
     dim_sensor[("mart.dim_sensor")]
     dim_limits[("mart.dim_parameter_limits")]
-    dim_date[("mart.dim_date")]
 
     %% Allikas → dimensioon
     src_loc --> dim_loc
     src_param --> dim_param
     src_sensor --> dim_sensor
     src_limits --> dim_limits
-    src_date --> dim_date
 
     %% Ingest
     api["OpenAQ API"]
@@ -72,7 +69,6 @@ flowchart LR
     dim_loc --> fact
     dim_param --> fact
     dim_sensor --> fact
-    dim_date --> fact
     dim_limits --> exceed
 
     %% Esitluskiht
@@ -87,10 +83,10 @@ flowchart LR
     classDef blue fill:#E6F1FB,stroke:#185FA5,color:#042C53;
     classDef plain fill:#F1EFE8,stroke:#5F5E5A,color:#2C2C2A;
 
-    class dim_loc,dim_param,dim_sensor,dim_limits,dim_date,fact,minmax,exceed green;
+    class dim_loc,dim_param,dim_sensor,dim_limits,fact,minmax,exceed green;
     class raw,runs red;
     class quality blue;
-    class src_loc,src_param,src_sensor,src_limits,src_date,api,cron,ingest,sql,superset plain;
+    class src_loc,src_param,src_sensor,src_limits,api,cron,ingest,sql,superset plain;
 ```
 
 Täpsem kirjeldus: [`docs/arhitektuur.md`](docs/arhitektuur.md)
@@ -135,6 +131,8 @@ docker compose up -d --build
 
 Näidikulaud: http://localhost:8088
 
+Näidikulaud värskendab andmevaadet vaikimisi iga 15 sekundi järel. Seda saab muuta .env faili väärtusega DASHBOARD_AUTOREFRESH_SECONDS. Väärtus 0 lülitab automaatse värskenduse välja.
+
 ## Saladused ja konfiguratsioon
 
 Kõik saladused (paroolid, API võtmed, andmebaasi URL-id) on `.env` failis. Repos on ainult `.env.example`, mis näitab vajalike muutujate struktuuri ilma tegelike väärtusteta. Päris `.env` faili ei tohi GitHubi panna - see on `.gitignore`-s.
@@ -178,10 +176,23 @@ Testide tulemused salvestatakse tabelisse quality.test_results.
 ├── compose.yml
 ├── .env.example
 ├── .gitignore
+├── Dockerfile.app
+├── Dockerfile.superset
 ├── docs/
 │   ├── arhitektuur.md      ← nädal 1 väljund
 │   └── progress.md         ← nädal 2 väljund
-└── ...                     ← ülejäänud projektifailid
+├── init/                    
+│   └── 01_create_objects.sql
+├── scripts/
+│   ├── 01_seed_dimensions.sql
+│   ├── 02_transform.sql
+|   ├── 03_quality_tests.sql
+|   ├── 04_check_results.sql
+|   ├── requirements.txt
+|   ├── run_pipeline.py
+|   └── start_cron.sh
+├── superset/
+|   └── superset_config.py
 ```
 
 ## Kokkuvõte, puudused ja võimalikud edasiarendused

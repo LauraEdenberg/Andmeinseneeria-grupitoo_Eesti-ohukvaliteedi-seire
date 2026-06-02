@@ -144,6 +144,11 @@ Vajalikud muutujad:
 | Muutuja | Tähendus | Näide |
 |---------|----------|-------|
 | `DB_PASSWORD` | PostgreSQL parool | (saladus) |
+| `SUPERSET_DB_PASSWORD` | Superset'i metaandmebaasi parool | ... |
+| `SUPERSET_SECRET_KEY` | 	Superset'i sessiooniküpsiste krüptovõti | ... |
+| `SUPERSET_ADMIN_USER / SUPERSET_ADMIN_PASSWORD` | Superset'i admin-kasutaja | ... |
+| `OPENAQ_API_KEY` | APIst andmete alla laadimiseks vajalik võti | ... |
+| `BACKFILL_DAYS` | Mitme päeva jagu andmeid alla laetakse (vaikimisi 7) | ... |
 | `[teised]` | ... | ... |
 
 ## Andmevoog lühidalt
@@ -163,7 +168,7 @@ Projekt kontrollib järgmist:
 3. [Test 3 - nt: kuupäev jääb vahemikku 2020-2026]
 [Lisa rohkem, kui sul on]
 
-Testide tulemused salvestatakse tabelisee quality.test_results.
+Testide tulemused salvestatakse tabelisse quality.test_results.
 
 ## Projekti struktuur
 

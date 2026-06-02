@@ -87,3 +87,33 @@ CREATE TABLE IF NOT EXISTS mart.fact_measurement (
     run_id uuid NOT NULL REFERENCES staging.pipeline_runs (run_id),
     PRIMARY KEY (sensor_id, period_from)
 );
+
+-- tabel päevaste min/max tulmuste kohta eri linnades + AVG lisaks
+CREATE TABLE IF NOT EXISTS mart.parameter_min_max (
+    location_id text NOT NULL REFERENCES mart.dim_location (location_id),
+    parameter_name text NOT NULL REFERENCES mart.dim_parameter (parameter_name),
+    measure_date date NOT NULL,
+    min_value numeric(12, 6),
+    max_value numeric(12, 6),
+    avg_value numeric(12, 6),
+    measurement_count integer NOT NULL,
+    computed_at timestamptz NOT NULL DEFAULT now(),
+    PRIMARY KEY (location_id, parameter_name, measure_date)
+);
+
+-- Superseti tarbeks vaade, milles on olemas nö inimloetavad nimed ehk location_name ja display_name
+CREATE OR REPLACE VIEW mart.v_parameter_min_max AS
+SELECT
+    mm.location_id,
+    l.location_name,
+    mm.parameter_name,
+    p.display_name AS parameter_display_name,
+    p.default_unit AS unit,
+    mm.measure_date,
+    mm.min_value,
+    mm.max_value,
+    mm.avg_value,
+    mm.measurement_count
+FROM mart.parameter_min_max AS mm
+JOIN mart.dim_location AS l ON l.location_id = mm.location_id
+JOIN mart.dim_parameter AS p ON p.parameter_name = mm.parameter_name;

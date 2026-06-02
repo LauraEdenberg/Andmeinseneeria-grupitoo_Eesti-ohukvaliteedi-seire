@@ -1,7 +1,7 @@
 TRUNCATE TABLE
     mart.fact_measurement,
-    mart.parameter_max_min,
-    mart.limit_exceedances;
+    mart.parameter_min_max;
+    --mart.limit_exceedances;
 
 INSERT INTO mart.fact_measurement (
     sensor_id,

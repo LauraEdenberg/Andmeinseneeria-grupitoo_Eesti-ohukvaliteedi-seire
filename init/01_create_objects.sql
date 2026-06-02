@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS staging.pipeline_runs (
     fetched_at timestamptz NOT NULL,
     source_name text NOT NULL,
     datetime_from timestamptz NOT NULL,
-    datetime_to timestamptz NOT NULL, -- seda hetkel ei ole data_from_api.py koodis parameetrite all, vaja lisada, kui tahame päritud andmete ajavahemiku infot oma metaandmetesse
+    datetime_to timestamptz NOT NULL,
     status text NOT NULL,
     message text
 );
@@ -70,8 +70,7 @@ CREATE TABLE IF NOT EXISTS staging.parameter_values_raw (
     percent_complete numeric(5, 2), -- api päringu andmekval. näitaja, mida saame ka ise kasutada
     fetched_at timestamptz NOT NULL,
     source_url text NOT NULL,
-    PRIMARY KEY (sensor_id, period_from), 
-    UNIQUE (sensor_id, period_from) --lisasin unikaalsuse piirangu, et sama sensori sama perioodi andmeid ei saaks topelt sisestada, vaid uuendatakse olemasolevat rida
+    PRIMARY KEY (sensor_id, period_from)
 );    
 
 -- mõõtmistulemuste faktitabel, milles on viited dimensioonidele

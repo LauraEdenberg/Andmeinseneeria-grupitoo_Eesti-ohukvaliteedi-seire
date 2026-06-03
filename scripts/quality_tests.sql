@@ -93,9 +93,18 @@ test_cases AS (
     SELECT 
         'concentrations_reasonable' AS test_name,
         COUNT(*)::integer AS failed_rows,
-        'Saasteaine kontsentratsioon ei tohi olla negatiivne' AS message
+        'Saasteaine kontsentratsioon ei tohi olla negatiivne.' AS message
     FROM staging.parameter_values_raw
     WHERE value < 0
+
+	UNION ALL
+
+    SELECT
+        'max_min_not_null' AS test_name,
+        COUNT(*)::integer AS failed_rows,
+        'Max ja min ei tohi olla NULL.' AS message
+    FROM mart.parameter_max_min
+    WHERE min_value IS NULL OR max_value IS NULL 
 )
 
 INSERT INTO quality.test_results (

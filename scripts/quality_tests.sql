@@ -103,7 +103,7 @@ test_cases AS (
         'max_min_not_null' AS test_name,
         COUNT(*)::integer AS failed_rows,
         'Max ja min ei tohi olla NULL.' AS message
-    FROM mart.parameter_max_min
+    FROM mart.parameter_min_max
     WHERE min_value IS NULL OR max_value IS NULL 
 )
 

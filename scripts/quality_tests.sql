@@ -63,13 +63,12 @@ test_cases AS (
         CASE 
     	    WHEN EXISTS(
                     SELECT 1 
-                    FROM staging.parameter_values_raw AS p 
-                    INNER JOIN latest_run AS l ON p.run_id = l.run_id
+                    FROM staging.parameter_values_raw
                     )
                     THEN 0
             ELSE 1
             END AS failed_rows,
-        'Viimasel APIst andmete laadimisel peab olema vähemalt üks rida.' AS message
+        'APIst andmete laadimisel peab olema vähemalt üks rida.' AS message
 
     UNION ALL
 

@@ -60,3 +60,29 @@ DO UPDATE SET
     avg_value         = EXCLUDED.avg_value,
     measurement_count = EXCLUDED.measurement_count,
     computed_at       = now();
+
+/*
+SELECT
+    location_id,
+    parameter_name,
+    year,
+    no_of_exceedances,
+    allowed_exceedances_per_year,
+    CASE
+        WHEN no_of_exceedances > allowed_exceedances_per_year
+        THEN 'piirmäära ületatud lubatust suurem arv kordi'
+        ELSE 'tulemus on normi piires'
+    END AS result
+FROM (
+    SELECT
+        f.location_id,
+        f.parameter_name,
+        EXTRACT(YEAR FROM period_from) AS year,
+        SUM(CASE WHEN f.value > l.limit_value THEN 1 ELSE 0 END) AS no_of_exceedances,
+        l.allowed_exceedances_per_year
+    FROM mart.fact_measurement AS f
+    JOIN mart.dim_parameter_limits AS l ON f.parameter_name = l.parameter_name
+    GROUP BY f.location_id, f.parameter_name, EXTRACT(YEAR FROM period_from), l.allowed_exceedances_per_year
+) AS report
+ORDER BY location_id, parameter_name, year;
+*/

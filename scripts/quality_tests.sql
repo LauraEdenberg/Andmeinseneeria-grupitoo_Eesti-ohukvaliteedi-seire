@@ -63,13 +63,12 @@ test_cases AS (
         CASE 
     	    WHEN EXISTS(
                     SELECT 1 
-                    FROM staging.parameter_values_raw AS p 
-                    INNER JOIN latest_run AS l ON p.run_id = l.run_id
+                    FROM staging.parameter_values_raw
                     )
                     THEN 0
             ELSE 1
             END AS failed_rows,
-        'Viimasel APIst andmete laadimisel peab olema vähemalt üks rida.' AS message
+        'APIst andmete laadimisel peab olema vähemalt üks rida.' AS message
 
     UNION ALL
 
@@ -94,9 +93,18 @@ test_cases AS (
     SELECT 
         'concentrations_reasonable' AS test_name,
         COUNT(*)::integer AS failed_rows,
-        'Saasteaine kontsentratsioon ei tohi olla negatiivne' AS message
+        'Saasteaine kontsentratsioon ei tohi olla negatiivne.' AS message
     FROM staging.parameter_values_raw
     WHERE value < 0
+
+	UNION ALL
+
+    SELECT
+        'max_min_not_null' AS test_name,
+        COUNT(*)::integer AS failed_rows,
+        'Max ja min ei tohi olla NULL.' AS message
+    FROM mart.parameter_min_max
+    WHERE min_value IS NULL OR max_value IS NULL 
 )
 
 INSERT INTO quality.test_results (

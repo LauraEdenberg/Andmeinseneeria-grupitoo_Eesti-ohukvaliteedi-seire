@@ -105,6 +105,15 @@ test_cases AS (
         'Max ja min ei tohi olla NULL.' AS message
     FROM mart.parameter_min_max
     WHERE min_value IS NULL OR max_value IS NULL 
+	
+	UNION ALL
+
+    SELECT 
+        "no_of_exceedances_not_null" AS test_name,
+        COUNT(*)::integer AS failed_rows,
+        'Piirmäärade ületamise arv ei tohi olla NULL' AS message
+    FROM mart.limit_exceedances
+    WHERE no_of_exceedances IS NULL
 )
 
 INSERT INTO quality.test_results (

@@ -61,6 +61,92 @@ DO UPDATE SET
     measurement_count = EXCLUDED.measurement_count,
     computed_at       = now();
 
+-- ühe tunni andmed, millest edasi eri keskmistamise perioodide tulemusi arvutada ja piirmääradega võrrelda
+WITH hourly AS (
+    SELECT
+        location_id,
+        parameter_name,
+        value,
+        period_from,
+        EXTRACT(YEAR FROM period_from) AS year,
+        date_trunc('day', period_from) AS day
+    FROM mart.fact_measurement
+),
+-- 1_hour: kasutab hourly value otse võrdluseks ületamiste arvu loendamiseks
+exceedance_1h AS (
+    SELECT
+        h.location_id,
+        h.parameter_name,
+        h.year,
+        l.allowed_exceedances_per_year,
+        SUM(CASE WHEN h.value > l.limit_value THEN 1 ELSE 0 END) AS no_of_exceedances
+    FROM hourly AS h
+    JOIN mart.dim_parameter_limits AS l ON h.parameter_name = l.parameter_name
+    AND l.averaging_period = '1_hour'
+    GROUP BY h.location_id, h.parameter_name, h.year, l.allowed_exceedances_per_year
+),
+-- 24_hour: esmalt arvutab päeva keskmise, seejärel loendab päevaste ületamiste arvu
+daily_avg AS (
+    SELECT
+        location_id,
+        parameter_name,
+        year,
+        day,
+        AVG(value) AS daily_value
+    FROM hourly
+    GROUP BY location_id, parameter_name, year, day
+),
+exceedance_24h AS (
+    SELECT
+        d.location_id,
+        d.parameter_name,
+        d.year,
+        l.allowed_exceedances_per_year,
+        SUM(CASE WHEN d.daily_value > l.limit_value THEN 1 ELSE 0 END) AS no_of_exceedances
+    FROM daily_avg AS d
+    JOIN mart.dim_parameter_limits AS l ON d.parameter_name = l.parameter_name
+    AND l.averaging_period = '24_hours'
+    GROUP BY d.location_id, d.parameter_name, d.year, l.allowed_exceedances_per_year
+),
+-- 1_year: ühe aasta keskmise võrdlemine piirmääraga ja ületuste arvu loendamine
+exceedance_1y AS (
+    SELECT
+        h.location_id,
+        h.parameter_name,
+        h.year,
+        l.allowed_exceedances_per_year,
+        CASE WHEN AVG(h.value) > l.limit_value THEN 1 ELSE 0 END AS no_of_exceedances
+    FROM hourly AS h
+    JOIN mart.dim_parameter_limits AS l ON h.parameter_name = l.parameter_name
+    AND l.averaging_period = '1_year'
+    GROUP BY h.location_id, h.parameter_name, h.year, l.allowed_exceedances_per_year, l.limit_value
+)
+-- hinnangute koondtabel koos keskmistamise perioodiga
+SELECT
+    location_id,
+    parameter_name,
+    averaging_period,
+    year,
+    no_of_exceedances,
+    allowed_exceedances_per_year,
+    CASE
+        WHEN allowed_exceedances_per_year IS NULL AND no_of_exceedances > 0
+            THEN 'aasta keskmine ületab piirmäära'
+        WHEN allowed_exceedances_per_year IS NULL
+            THEN 'tulemus on normide piires'
+        WHEN no_of_exceedances > allowed_exceedances_per_year
+            THEN 'piirmäära ületatud lubatust suurem arv kordi'
+        ELSE 'tulemus on normide piires'
+    END AS result
+FROM (
+    SELECT location_id, parameter_name, year, allowed_exceedances_per_year, no_of_exceedances, '1_hour' AS averaging_period FROM exceedance_1h
+    UNION ALL
+    SELECT location_id, parameter_name, year, allowed_exceedances_per_year, no_of_exceedances, '24_hours' AS averaging_period FROM exceedance_24h
+    UNION ALL
+    SELECT location_id, parameter_name, year, allowed_exceedances_per_year, no_of_exceedances, '1_year' AS averaging_period FROM exceedance_1y
+) AS combined
+ORDER BY location_id, parameter_name, averaging_period, year;
+
 /*
 SELECT
     location_id,

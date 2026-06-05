@@ -42,8 +42,10 @@ Kuidas erineb õhukvaliteet Eesti suuremates linnades (Tallinna, Tartu, Narva) n
 
 ```bash
 # 1. Klooni repo ja liigu kausta
-git clone <repo-url>
-cd <projekti-kaust>
+git clone https://github.com/LauraEdenberg/Andmeinseneeria-grupitoo_Eesti-ohukvaliteedi-seire.git
+cd Andmeinseneeria-grupitoo_Eesti-ohukvaliteedi-seire
+
+https://github.com/LauraEdenberg/Andmeinseneeria-grupitoo_Eesti-ohukvaliteedi-seire.git
 
 # 2. Kopeeri keskkonnamuutujad
 cp .env.example .env

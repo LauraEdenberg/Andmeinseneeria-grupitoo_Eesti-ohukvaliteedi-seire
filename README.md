@@ -88,11 +88,11 @@ Vajalikud muutujad:
 
 Projekt kontrollib järgmist:
 
-1. Koodi käivitamisel tekkisid read järgnevatesse tabelitesse: asukohtade dimensioon (mart.dim_location), parameetrite dimensioon (mart.dim_parameter), sensorite dimensioon (mart.dim_sensor), saasteainete piirväärtuste dimensioon (mart.dim_parameter_limits) ja toorandmete tabel staging.parameter_values_raw
-2. sama sensori, kuupäeva ja kellaaja kohta ei teki duplikaate
-3. saasteainete kontsentratsioonid ei ole negatiivsed
-4. mart.parameter_min_max tabelis ei ole minimaalne ega maksimaalne väärtus NULL
-5. mart.limit_exceedances tabelis ei ole piirväärtuste ületamise arv NULL
+1. koodi käivitamisel tekivad read järgnevatesse tabelitesse: asukohtade dimensioon (mart.dim_location), parameetrite dimensioon (mart.dim_parameter), sensorite dimensioon (mart.dim_sensor), saasteainete piirväärtuste dimensioon (mart.dim_parameter_limits) ja toorandmete tabel staging.parameter_values_raw;
+2. sama sensori, kuupäeva ja kellaaja kohta ei teki duplikaate;
+3. saasteainete kontsentratsioonid ei ole negatiivsed;
+4. mart.parameter_min_max tabelis ei ole minimaalne ega maksimaalne väärtus NULL;
+5. mart.limit_exceedances tabelis ei ole piirväärtuste ületamise arv NULL.
 
 Testide tulemused salvestatakse tabelisse quality.test_results.
 

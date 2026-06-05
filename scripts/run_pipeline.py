@@ -430,26 +430,41 @@ def check_results() -> None:
             ORDER BY location_name
             """,
         )
-        #print_query(
-            #conn,
-            #"Parimad 3-tunnised ajaaknad",
-            #"""
-            #SELECT
-                #location_name,
-                #window_start,
-                #window_end,
-                #avg_combined_score,
-                #avg_temperature_c,
-                #total_precipitation_mm,
-                #max_precipitation_probability_pct,
-                #max_wind_speed_ms,
-                #recommendation_label,
-                #main_reason
-            #FROM mart.latest_outdoor_activity_windows
-            #ORDER BY avg_combined_score DESC, window_start
-            #LIMIT 10
-            #""",
-        #)
+        print_query(
+            conn,
+            "Ööpäevane parameetrite mõõtmistulemuste kõikumine",
+            """
+            SELECT
+                location_name,
+                parameter_display_name,
+                unit,
+                measure_date,
+                min_value,
+                max_value,
+                avg_value,
+                measurement_count
+            FROM mart.v_parameter_min_max
+            ORDER BY measure_date DESC, location_name
+            LIMIT 10
+            """,
+        )
+        print_query(
+            conn,
+            "Piirmäärade ületamine",
+            """
+            SELECT
+                location_name,
+                parameter_display_name,
+                averaging_period,
+                year,
+                no_of_exceedances,
+                allowed_exceedances_per_year,
+                result
+            FROM mart.v_limit_exceedances
+            ORDER BY year DESC, location_name, parameter_display_name
+            LIMIT 10
+            """,
+        )
         print_query(
             conn,
             "Andmekvaliteedi testid",

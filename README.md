@@ -1,4 +1,5 @@
 # Eesti õhukvaliteedi seire
+Projekti näol on tegu väikese otsast lõpuni ehitatud andmetöövooga, mis tugineb OpenAQ õhukvaliteediandmetele. Esmalt salvestatakse OpenAQ API-st päritud kolme Eesti suurema linna andmed PostgreSQL-i. Edasiste tranformatsionide abil leitakse järgnev: 1) õhus leiduvate saasteainete ööpäevased miinimum- ja maksimumväärtused kõigis kolmes linnas ning 2) kontrollitakse, kas kõiki saasteaineid esineb õhus lubatud normi piires vastavalt Riigiteatajas toodud piirväärtustele (https://www.riigiteataja.ee/aktilisa/1060/3201/9012/KKM_m8_lisa1.pdf#). Projekt kontrollib ka andmekvaliteeti ning kuvab tulemusi Superseti näidikulaual. Scheduler ehk ajastaja konteiner värskendab andmeid vaikimisi iga tunni alguses.
 
 ## Äriküsimus
 
@@ -129,7 +130,7 @@ Testide tulemused salvestatakse tabelisse quality.test_results.
 - Docker Compose käivitab viis teenust: andmebaas (db, pgduckdb-põhine Postgres, mille skeem ja tabelid luuakse init-skriptidega kaustast ./init), käsitsi käivitatav töövoog (pipeline), ajastatud töövoog (scheduler, mis jooksutab pipeline'i automaatselt cron-graafiku alusel kord tunnis) ning näidikulaud (superset) koos selle abiteenustega (superset-db Superseti metaandmete jaoks ja ühekordne superset-init algseadistuseks). 
 - Andmete sissevõtt OpenAQ API-st töötab — sensorid loetakse mart.dim_sensor-ist ja iga sensori mõõtmised laaditakse staging.parameter_values_raw tabelisse, koos laadimiste jälgimisega staging.pipeline_runs-is.
 - Transformatsioon viib toorandmed mart.fact_measurement faktitabelisse ja arvutab mart.parameter_min_max tabelisse päevased min/max/keskmised väärtused asukoha ja saasteaine kaupa.
-- Piirmäärade ületamiste hindamine on lahendatud vaatega mart.v_limit_exceedances, mis võrdleb mõõtmisi dim_parameter_limits piirmääradega eri keskmistamisperioodide kaupa ja loendab aastased ületamised lubatud ületamiste arvu vastu.
+- Piirmäärade ületamiste hindamine on lahendatud vaatega mart.v_limit_exceedances, mis võrdleb mõõtmistulemusi tabelis mart.dim_parameter_limits toodud piirväärtustega ja aastase lubatud ületamiste arvuga. Seejuures arvutatakse mõõtmistulemuste keskmised väärtused erinevatele keskmistamise perioodidele sõltuvalt parameetrist, võrreldakse neid kehtestatud piirväärtusega ning loendatakse seejärel, mitu piirväärtuse ületamist ühes aastas esineb. Aastast ületamise arvu võrreldakse seejärel lubatud ületamiste arvuga ning antakse lõplik hinnang. 
 
 **Puudused:**
 - [Loetle ausalt, mis jäi tegemata - see ei mõjuta hinnet negatiivselt, vaid aitab hinnata]

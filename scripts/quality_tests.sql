@@ -114,7 +114,7 @@ test_cases AS (
         'no_of_exceedances_not_null' AS test_name,
         COUNT(*)::integer AS failed_rows,
         'Piirmäärade ületamise arv ei tohi olla NULL' AS message
-    FROM mart.limit_exceedances
+    FROM mart.v_limit_exceedances
     WHERE no_of_exceedances IS NULL
 )
 

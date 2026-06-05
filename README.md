@@ -9,7 +9,6 @@ Kuidas erineb õhukvaliteet Eesti suuremates linnades (Tallinna, Tartu, Narva) n
 
 1. Päevane näitajate kõikumine (min/max + aeg)
 2. Piirväärtuste ületamise arv mingis ajaühikus (seadus määrab ületamiseks erinevad keskmistamise perioodid)
-3. Domineeriv saasteaine eri linnades (st milline on European Air Quality Index’i määraja) (kui jõuame)
 
 
 ## Arhitektuur
@@ -151,9 +150,9 @@ Vajalikud muutujad:
 
 ## Andmevoog lühidalt
 
-1. **Sissevõtt** — [Kirjelda, kuidas andmed allikast kätte saadakse]
-2. **Laadimine** — Andmed laaditakse `staging` kihti
-3. **Transformatsioon** — [Kirjelda peamised arvutused ja mudelid]
+1. **Sissevõtt** — Skript loeb dimensioonitabelitest aktiivsed sensorid (mart.dim_sensor, mis seob iga sensori asukoha ja saasteainega) ning pärib OpenAQ API-st iga sensori kohta valitud ajavahemiku (vaikimisi viimased 7 päeva) tunnipõhised mõõtmistulemused.
+2. **Laadimine** — Andmed laaditakse `staging` kihti (tabel.staging_parameter_values_raw), kus iga laadimist jälgitakse staging.pipeline_runs tabelis. Korduval laadimisel olemasolevad read uuendatakse (ON CONFLICT (sensor_id, period_from)).
+3. **Transformatsioon** — Toorandmed viiakse staging kihist mart.fact_measurement faktitabelisse (ühendades sensorid asukohtade ja parameetritega). Edasi arvutatakse mart.parameter_min_max tabelisse päevased min-, max- ja keskmised väärtused asukoha ja saasteaine kaupa. Piirmäärade ületamisi hinnatakse vaates mart.v_limit_exceedances, mis võrdleb mõõtmistulemusi mart.dim_parameter_limits piirmääradega eri keskmistamisperioodide kaupa (tunnipõhine, ööpäeva keskmine ja aasta keskmine) ning annab selle põhjal hinnangu, kas väärtused on normi piires või ületavad normi.
 4. **Testimine** — [Mitu] andmekvaliteedi testi kontrollivad korrektsust
 5. **Näidikulaud** — [Kirjelda lühidalt, mida näidikulaud näitab]
 
@@ -185,9 +184,9 @@ Testide tulemused salvestatakse tabelisse quality.test_results.
 │   └── 01_create_objects.sql
 ├── scripts/
 │   ├── 01_seed_dimensions.sql
-│   ├── 02_transform.sql
-|   ├── 03_quality_tests.sql
-|   ├── 04_check_results.sql
+│   ├── transform.sql
+|   ├── quality_tests.sql
+|   ├── check_results.sql
 |   ├── requirements.txt
 |   ├── run_pipeline.py
 |   └── start_cron.sh
@@ -198,13 +197,16 @@ Testide tulemused salvestatakse tabelisse quality.test_results.
 ## Kokkuvõte, puudused ja võimalikud edasiarendused
 
 **Kokkuvõte:**
-- [Loetle, mis on lõpule viidud, mis töötab hästi]
+- Docker Compose käivitab viis teenust: andmebaas (db, pgduckdb-põhine Postgres, mille skeem ja tabelid luuakse init-skriptidega kaustast ./init), käsitsi käivitatav töövoog (pipeline), ajastatud töövoog (scheduler, mis jooksutab pipeline'i automaatselt cron-graafiku alusel kord tunnis) ning näidikulaud (superset) koos selle abiteenustega (superset-db Superseti metaandmete jaoks ja ühekordne superset-init algseadistuseks). 
+- Andmete sissevõtt OpenAQ API-st töötab — sensorid loetakse mart.dim_sensor-ist ja iga sensori mõõtmised laaditakse staging.parameter_values_raw tabelisse, koos laadimiste jälgimisega staging.pipeline_runs-is.
+- Transformatsioon viib toorandmed mart.fact_measurement faktitabelisse ja arvutab mart.parameter_min_max tabelisse päevased min/max/keskmised väärtused asukoha ja saasteaine kaupa.
+- Piirmäärade ületamiste hindamine on lahendatud vaatega mart.v_limit_exceedances, mis võrdleb mõõtmisi dim_parameter_limits piirmääradega eri keskmistamisperioodide kaupa ja loendab aastased ületamised lubatud ületamiste arvu vastu.
 
 **Puudused:**
 - [Loetle ausalt, mis jäi tegemata - see ei mõjuta hinnet negatiivselt, vaid aitab hinnata]
 
 **Mis edasi:**
-- [Mida tahaksid edasi teha, kui aega oleks rohkem]
+- Üks parameeter (osoon) jäi mart.v_limit_exceedances vaatest välja, kuna vajas tranformatsioonis võrreldes teiste parameetritega erinevat loogikat (libiseva 8h keskmise väärtuse võrdlus lubatud piirmääraga).
 
 ## Meeskond
 

@@ -81,17 +81,18 @@ Vajalikud muutujad:
 1. **Sissevõtt** — Skript loeb dimensioonitabelitest aktiivsed sensorid (mart.dim_sensor, mis seob iga sensori asukoha ja saasteainega) ning pärib OpenAQ API-st iga sensori kohta valitud ajavahemiku (vaikimisi viimased 7 päeva) tunnipõhised mõõtmistulemused.
 2. **Laadimine** — Andmed laaditakse `staging` kihti (tabel.staging_parameter_values_raw), kus iga laadimist jälgitakse staging.pipeline_runs tabelis. Korduval laadimisel olemasolevad read uuendatakse (ON CONFLICT (sensor_id, period_from)).
 3. **Transformatsioon** — Toorandmed viiakse staging kihist mart.fact_measurement faktitabelisse (ühendades sensorid asukohtade ja parameetritega). Edasi arvutatakse mart.parameter_min_max tabelisse päevased min-, max- ja keskmised väärtused asukoha ja saasteaine kaupa. Piirmäärade ületamisi hinnatakse vaates mart.v_limit_exceedances, mis võrdleb mõõtmistulemusi mart.dim_parameter_limits piirmääradega eri keskmistamisperioodide kaupa (tunnipõhine, ööpäeva keskmine ja aasta keskmine) ning annab selle põhjal hinnangu, kas väärtused on normi piires või ületavad normi.
-4. **Testimine** — [Mitu] andmekvaliteedi testi kontrollivad korrektsust
+4. **Testimine** — 9 andmekvaliteedi testi kontrollivad korrektsust
 5. **Näidikulaud** — [Kirjelda lühidalt, mida näidikulaud näitab]
 
 ## Andmekvaliteedi testid
 
 Projekt kontrollib järgmist:
 
-1. [Test 1 - nt: kasutajate ID on unikaalne]
-2. [Test 2 - nt: tellimuse summa pole null]
-3. [Test 3 - nt: kuupäev jääb vahemikku 2020-2026]
-[Lisa rohkem, kui sul on]
+1. Koodi käivitamisel tekkisid read järgnevatesse tabelitesse: asukohtade dimensioon (mart.dim_location), parameetrite dimensioon (mart.dim_parameter), sensorite dimensioon (mart.dim_sensor), saasteainete piirväärtuste dimensioon (mart.dim_parameter_limits) ja toorandmete tabel staging.parameter_values_raw
+2. sama sensori, kuupäeva ja kellaaja kohta ei teki duplikaate
+3. saasteainete kontsentratsioonid ei ole negatiivsed
+4. mart.parameter_min_max tabelis ei ole minimaalne ega maksimaalne väärtus NULL
+5. mart.limit_exceedances tabelis ei ole piirväärtuste ületamise arv NULL
 
 Testide tulemused salvestatakse tabelisse quality.test_results.
 

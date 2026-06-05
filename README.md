@@ -92,7 +92,7 @@ Projekt kontrollib järgmist:
 2. sama sensori, kuupäeva ja kellaaja kohta ei teki duplikaate;
 3. saasteainete kontsentratsioonid ei ole negatiivsed;
 4. mart.parameter_min_max tabelis ei ole minimaalne ega maksimaalne väärtus NULL;
-5. mart.limit_exceedances tabelis ei ole piirväärtuste ületamise arv NULL.
+5. mart.v_limit_exceedances vaates ei ole piirväärtuste ületamise arv NULL.
 
 Testide tulemused salvestatakse tabelisse quality.test_results.
 

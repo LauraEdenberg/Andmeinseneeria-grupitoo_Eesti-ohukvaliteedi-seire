@@ -13,6 +13,10 @@ Kuidas erineb õhukvaliteet Eesti suuremates linnades (Tallinna, Tartu, Narva) n
 
 ## Arhitektuur
 
+
+<img width="1626" height="659" alt="image" src="https://github.com/user-attachments/assets/29fee42b-cffe-42aa-bcd9-82aa9fb64aee" />
+
+
 ```mermaid
 flowchart LR
     %% Staatilised dimensiooni-allikad

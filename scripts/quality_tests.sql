@@ -81,7 +81,8 @@ test_cases AS (
             sensor_id,
             period_from,
             COUNT(*) AS row_count
-        FROM staging.parameter_values_raw
+        FROM staging.parameter_values_raw AS p
+        INNER JOIN latest_run AS r ON p.run_id = r.run_id
         GROUP BY 
             sensor_id,
             period_from
@@ -94,7 +95,8 @@ test_cases AS (
         'concentrations_reasonable' AS test_name,
         COUNT(*)::integer AS failed_rows,
         'Saasteaine kontsentratsioon ei tohi olla negatiivne.' AS message
-    FROM staging.parameter_values_raw
+    FROM staging.parameter_values_raw AS p
+    INNER JOIN latest_run AS r ON p.run_id = r.run_id
     WHERE value < 0
 
 	UNION ALL

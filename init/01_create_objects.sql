@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS mart.parameter_min_max (
     PRIMARY KEY (location_id, parameter_name, measure_date)
 );
 
--- Superseti tarbeks vaade, milles on olemas nö inimloetavad nimed ehk location_name ja display_name
+-- Superseti tarbeks vaade parameter_min_max tabelist, milles on olemas nö inimloetavad nimed ehk location_name ja display_name
 CREATE OR REPLACE VIEW mart.v_parameter_min_max AS
 SELECT
     mm.location_id,
@@ -116,3 +116,97 @@ SELECT
 FROM mart.parameter_min_max AS mm
 JOIN mart.dim_location AS l ON l.location_id = mm.location_id
 JOIN mart.dim_parameter AS p ON p.parameter_name = mm.parameter_name;
+
+-- Superseti tarbeks vaade limit_exceedance. Sisult dubleerib seda, mis transformatsioonide all olemas on, aga igaks juhuks sealt kohe ära ei kustutanud seda.
+CREATE OR REPLACE VIEW mart.v_limit_exceedances AS
+WITH hourly AS (
+    SELECT
+        location_id,
+        parameter_name,
+        value,
+        period_from,
+        EXTRACT(YEAR FROM period_from) AS year,
+        date_trunc('day', period_from) AS day
+    FROM mart.fact_measurement
+),
+-- 1_hour: value otse võrdluseks
+exceedance_1h AS (
+    SELECT
+        h.location_id,
+        h.parameter_name,
+        h.year,
+        l.allowed_exceedances_per_year,
+        SUM(CASE WHEN h.value > l.limit_value THEN 1 ELSE 0 END) AS no_of_exceedances
+    FROM hourly AS h
+    JOIN mart.dim_parameter_limits AS l
+        ON h.parameter_name = l.parameter_name
+        AND l.averaging_period = '1_hour'
+    GROUP BY h.location_id, h.parameter_name, h.year, l.allowed_exceedances_per_year
+),
+-- 24_hours: päeva keskmine + päevaste ületamiste arv
+daily_avg AS (
+    SELECT
+        location_id,
+        parameter_name,
+        year,
+        day,
+        AVG(value) AS daily_value
+    FROM hourly
+    GROUP BY location_id, parameter_name, year, day
+),
+exceedance_24h AS (
+    SELECT
+        d.location_id,
+        d.parameter_name,
+        d.year,
+        l.allowed_exceedances_per_year,
+        SUM(CASE WHEN d.daily_value > l.limit_value THEN 1 ELSE 0 END) AS no_of_exceedances
+    FROM daily_avg AS d
+    JOIN mart.dim_parameter_limits AS l
+        ON d.parameter_name = l.parameter_name
+        AND l.averaging_period = '24_hours'
+    GROUP BY d.location_id, d.parameter_name, d.year, l.allowed_exceedances_per_year
+),
+-- 1_year: aasta keskmine vs piirmäär
+exceedance_1y AS (
+    SELECT
+        h.location_id,
+        h.parameter_name,
+        h.year,
+        l.allowed_exceedances_per_year,
+        CASE WHEN AVG(h.value) > l.limit_value THEN 1 ELSE 0 END AS no_of_exceedances
+    FROM hourly AS h
+    JOIN mart.dim_parameter_limits AS l
+        ON h.parameter_name = l.parameter_name
+        AND l.averaging_period = '1_year'
+    GROUP BY h.location_id, h.parameter_name, h.year, l.allowed_exceedances_per_year, l.limit_value
+),
+combined AS (
+    SELECT location_id, parameter_name, year, allowed_exceedances_per_year, no_of_exceedances, '1_hour'   AS averaging_period FROM exceedance_1h
+    UNION ALL
+    SELECT location_id, parameter_name, year, allowed_exceedances_per_year, no_of_exceedances, '24_hours' AS averaging_period FROM exceedance_24h
+    UNION ALL
+    SELECT location_id, parameter_name, year, allowed_exceedances_per_year, no_of_exceedances, '1_year'   AS averaging_period FROM exceedance_1y
+)
+SELECT
+    c.location_id,
+    l.location_name,
+    c.parameter_name,
+    p.display_name AS parameter_display_name,
+    p.default_unit AS unit,
+    c.averaging_period,
+    c.year,
+    c.no_of_exceedances,
+    c.allowed_exceedances_per_year,
+    CASE
+        WHEN c.allowed_exceedances_per_year IS NULL AND c.no_of_exceedances > 0
+            THEN 'aasta keskmine ületab piirmäära'
+        WHEN c.allowed_exceedances_per_year IS NULL
+            THEN 'tulemus on normide piires'
+        WHEN c.no_of_exceedances > c.allowed_exceedances_per_year
+            THEN 'piirmäära ületatud lubatust suurem arv kordi'
+        ELSE 'tulemus on normide piires'
+    END AS result
+FROM combined AS c
+JOIN mart.dim_location AS l ON l.location_id = c.location_id
+JOIN mart.dim_parameter AS p ON p.parameter_name = c.parameter_name;

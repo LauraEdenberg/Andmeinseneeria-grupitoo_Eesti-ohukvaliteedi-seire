@@ -21,7 +21,8 @@ Kuidas erineb õhukvaliteet Eesti suuremates linnades (Tallinna, Tartu, Narva) n
 | mart.dim_date | Staatiline dimensioonitabel | Ei, staatiline | Kuupäevad |
 
 ## Andmevoog
-<img width="1899" height="760" alt="image" src="https://github.com/user-attachments/assets/8ddf3900-44c1-4d5e-9757-648aec1cc467" />
+<img width="2173" height="872" alt="image" src="https://github.com/user-attachments/assets/5906047e-2194-4243-8327-59b850fb0b8d" />
+
 
 
 ```mermaid

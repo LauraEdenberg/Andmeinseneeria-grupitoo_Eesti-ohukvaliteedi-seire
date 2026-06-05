@@ -1,4 +1,5 @@
 # Eesti õhukvaliteedi seire
+Projekti näol on tegu väikese otsast lõpuni ehitatud andmetöövooga, mis tugineb OpenAQ õhukvaliteediandmetele. Esmalt salvestatakse OpenAQ API-st päritud kolme Eesti suurema linna andmed PostgreSQL-i. Edasiste tranformatsionide abil leitakse järgnev: 1) õhus leiduvate saasteainete ööpäevased miinimum- ja maksimumväärtused kõigis kolmes linnas ning 2) kontrollitakse, kas kõiki saasteaineid esineb õhus lubatud normi piires vastavalt Riigiteatajas toodud piirväärtustele (https://www.riigiteataja.ee/aktilisa/1060/3201/9012/KKM_m8_lisa1.pdf#). Projekt kontrollib ka andmekvaliteeti ning kuvab tulemusi Superseti näidikulaual. Scheduler ehk ajastaja konteiner värskendab andmeid vaikimisi iga tunni alguses.
 
 ## Äriküsimus
 
@@ -9,85 +10,12 @@ Kuidas erineb õhukvaliteet Eesti suuremates linnades (Tallinna, Tartu, Narva) n
 
 1. Päevane näitajate kõikumine (min/max + aeg)
 2. Piirväärtuste ületamise arv mingis ajaühikus (seadus määrab ületamiseks erinevad keskmistamise perioodid)
-3. Domineeriv saasteaine eri linnades (st milline on European Air Quality Index’i määraja) (kui jõuame)
 
 
 ## Arhitektuur
 
-```mermaid
-flowchart LR
-    %% Staatilised dimensiooni-allikad
-    src_loc["staatiline asukoha-dimensioon"]
-    src_param["staatiline parameetri-dimensioon"]
-    src_sensor["staatiline sensori-dimensioon"]
-    src_limits["staatiline piirväärtuste dimensioon"]
 
-    %% Dimensioonitabelid (mart)
-    dim_loc[("mart.dim_location")]
-    dim_param[("mart.dim_parameter")]
-    dim_sensor[("mart.dim_sensor")]
-    dim_limits[("mart.dim_parameter_limits")]
-
-    %% Allikas → dimensioon
-    src_loc --> dim_loc
-    src_param --> dim_param
-    src_sensor --> dim_sensor
-    src_limits --> dim_limits
-
-    %% Ingest
-    api["OpenAQ API"]
-    cron["Cron scheduler"]
-    ingest["Python ingest"]
-
-    api --> ingest
-    cron -.-> ingest
-    dim_sensor --> ingest
-
-    %% Staging
-    raw[("staging.parameter_values_raw")]
-    runs[("staging.pipeline_runs")]
-
-    ingest --> raw
-    ingest --> runs
-
-    %% Transformatsioon
-    sql["SQL transformatsioon"]
-    raw --> sql
-
-    %% Fakti- ja tulemustabelid
-    fact[("mart.fact_measurement")]
-    minmax[("mart.parameter_min_max")]
-    exceed[("mart.limit_exceedances")]
-    quality[("quality.test_results")]
-
-    sql --> fact
-    sql --> minmax
-    sql --> exceed
-    sql --> quality
-
-    %% Dimensioonid → faktitabel
-    dim_loc --> fact
-    dim_param --> fact
-    dim_sensor --> fact
-    dim_limits --> exceed
-
-    %% Esitluskiht
-    superset["Superset näidikulaud"]
-    fact --> superset
-    minmax --> superset
-    exceed --> superset
-
-    %% Värvid
-    classDef green fill:#EAF3DE,stroke:#3B6D11,color:#173404;
-    classDef red fill:#FCEBEB,stroke:#A32D2D,color:#501313;
-    classDef blue fill:#E6F1FB,stroke:#185FA5,color:#042C53;
-    classDef plain fill:#F1EFE8,stroke:#5F5E5A,color:#2C2C2A;
-
-    class dim_loc,dim_param,dim_sensor,dim_limits,fact,minmax,exceed green;
-    class raw,runs red;
-    class quality blue;
-    class src_loc,src_param,src_sensor,src_limits,api,cron,ingest,sql,superset plain;
-```
+<img width="1626" height="659" alt="image" src="https://github.com/user-attachments/assets/29fee42b-cffe-42aa-bcd9-82aa9fb64aee" />
 
 Täpsem kirjeldus: [`docs/arhitektuur.md`](docs/arhitektuur.md)
 
@@ -141,7 +69,7 @@ Vajalikud muutujad:
 
 | Muutuja | Tähendus | Näide |
 |---------|----------|-------|
-| `DB_PASSWORD` | PostgreSQL parool | (saladus) |
+| `POSTGRES_PASSWORD` | PostgreSQL parool | (saladus) |
 | `SUPERSET_DB_PASSWORD` | Superset'i metaandmebaasi parool | ... |
 | `SUPERSET_SECRET_KEY` | 	Superset'i sessiooniküpsiste krüptovõti | ... |
 | `SUPERSET_ADMIN_USER / SUPERSET_ADMIN_PASSWORD` | Superset'i admin-kasutaja | ... |
@@ -151,20 +79,21 @@ Vajalikud muutujad:
 
 ## Andmevoog lühidalt
 
-1. **Sissevõtt** — [Kirjelda, kuidas andmed allikast kätte saadakse]
-2. **Laadimine** — Andmed laaditakse `staging` kihti
-3. **Transformatsioon** — [Kirjelda peamised arvutused ja mudelid]
-4. **Testimine** — [Mitu] andmekvaliteedi testi kontrollivad korrektsust
+1. **Sissevõtt** — Skript loeb dimensioonitabelitest aktiivsed sensorid (mart.dim_sensor, mis seob iga sensori asukoha ja saasteainega) ning pärib OpenAQ API-st iga sensori kohta valitud ajavahemiku (vaikimisi viimased 7 päeva) tunnipõhised mõõtmistulemused.
+2. **Laadimine** — Andmed laaditakse `staging` kihti (tabel.staging_parameter_values_raw), kus iga laadimist jälgitakse staging.pipeline_runs tabelis. Korduval laadimisel olemasolevad read uuendatakse (ON CONFLICT (sensor_id, period_from)).
+3. **Transformatsioon** — Toorandmed viiakse staging kihist mart.fact_measurement faktitabelisse (ühendades sensorid asukohtade ja parameetritega). Edasi arvutatakse mart.parameter_min_max tabelisse päevased min-, max- ja keskmised väärtused asukoha ja saasteaine kaupa. Piirmäärade ületamisi hinnatakse vaates mart.v_limit_exceedances, mis võrdleb mõõtmistulemusi mart.dim_parameter_limits piirmääradega eri keskmistamisperioodide kaupa (tunnipõhine, ööpäeva keskmine ja aasta keskmine) ning annab selle põhjal hinnangu, kas väärtused on normi piires või ületavad normi.
+4. **Testimine** — 9 andmekvaliteedi testi kontrollivad korrektsust
 5. **Näidikulaud** — [Kirjelda lühidalt, mida näidikulaud näitab]
 
 ## Andmekvaliteedi testid
 
 Projekt kontrollib järgmist:
 
-1. [Test 1 - nt: kasutajate ID on unikaalne]
-2. [Test 2 - nt: tellimuse summa pole null]
-3. [Test 3 - nt: kuupäev jääb vahemikku 2020-2026]
-[Lisa rohkem, kui sul on]
+1. koodi käivitamisel tekivad read järgnevatesse tabelitesse: asukohtade dimensioon (mart.dim_location), parameetrite dimensioon (mart.dim_parameter), sensorite dimensioon (mart.dim_sensor), saasteainete piirväärtuste dimensioon (mart.dim_parameter_limits) ja toorandmete tabel staging.parameter_values_raw;
+2. sama sensori, kuupäeva ja kellaaja kohta ei teki duplikaate;
+3. saasteainete kontsentratsioonid ei ole negatiivsed;
+4. mart.parameter_min_max tabelis ei ole minimaalne ega maksimaalne väärtus NULL;
+5. mart.v_limit_exceedances vaates ei ole piirväärtuste ületamise arv NULL.
 
 Testide tulemused salvestatakse tabelisse quality.test_results.
 
@@ -185,9 +114,9 @@ Testide tulemused salvestatakse tabelisse quality.test_results.
 │   └── 01_create_objects.sql
 ├── scripts/
 │   ├── 01_seed_dimensions.sql
-│   ├── 02_transform.sql
-|   ├── 03_quality_tests.sql
-|   ├── 04_check_results.sql
+│   ├── transform.sql
+|   ├── quality_tests.sql
+|   ├── check_results.sql
 |   ├── requirements.txt
 |   ├── run_pipeline.py
 |   └── start_cron.sh
@@ -198,13 +127,16 @@ Testide tulemused salvestatakse tabelisse quality.test_results.
 ## Kokkuvõte, puudused ja võimalikud edasiarendused
 
 **Kokkuvõte:**
-- [Loetle, mis on lõpule viidud, mis töötab hästi]
+- Docker Compose käivitab viis teenust: andmebaas (db, pgduckdb-põhine Postgres, mille skeem ja tabelid luuakse init-skriptidega kaustast ./init), käsitsi käivitatav töövoog (pipeline), ajastatud töövoog (scheduler, mis jooksutab pipeline'i automaatselt cron-graafiku alusel kord tunnis) ning näidikulaud (superset) koos selle abiteenustega (superset-db Superseti metaandmete jaoks ja ühekordne superset-init algseadistuseks). 
+- Andmete sissevõtt OpenAQ API-st töötab — sensorid loetakse mart.dim_sensor-ist ja iga sensori mõõtmised laaditakse staging.parameter_values_raw tabelisse, koos laadimiste jälgimisega staging.pipeline_runs-is.
+- Transformatsioon viib toorandmed mart.fact_measurement faktitabelisse ja arvutab mart.parameter_min_max tabelisse päevased min/max/keskmised väärtused asukoha ja saasteaine kaupa.
+- Piirmäärade ületamiste hindamine on lahendatud vaatega mart.v_limit_exceedances, mis võrdleb mõõtmistulemusi tabelis mart.dim_parameter_limits toodud piirväärtustega ja aastase lubatud ületamiste arvuga. Seejuures arvutatakse mõõtmistulemuste keskmised väärtused erinevatele keskmistamise perioodidele sõltuvalt parameetrist, võrreldakse neid kehtestatud piirväärtusega ning loendatakse seejärel, mitu piirväärtuse ületamist ühes aastas esineb. Aastast ületamise arvu võrreldakse seejärel lubatud ületamiste arvuga ning antakse lõplik hinnang. 
 
 **Puudused:**
 - [Loetle ausalt, mis jäi tegemata - see ei mõjuta hinnet negatiivselt, vaid aitab hinnata]
 
 **Mis edasi:**
-- [Mida tahaksid edasi teha, kui aega oleks rohkem]
+- Ühe ajapuuduse tõttu välja jäänud parameetri (osoon) lisamine mart.v_limit_exceedances vaatesse. See oleks põnev ära lahendada, kuna vajab võrreldes teiste parameetritega erinevat loogikat (libiseva 8h keskmise väärtuse võrldus piirimääraga).
 
 ## Meeskond
 

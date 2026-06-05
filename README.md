@@ -206,7 +206,7 @@ Testide tulemused salvestatakse tabelisse quality.test_results.
 - [Loetle ausalt, mis jäi tegemata - see ei mõjuta hinnet negatiivselt, vaid aitab hinnata]
 
 **Mis edasi:**
-- Üks parameeter (osoon) jäi mart.v_limit_exceedances vaatest välja, kuna vajas tranformatsioonis võrreldes teiste parameetritega erinevat loogikat (libiseva 8h keskmise väärtuse võrdlus lubatud piirmääraga).
+- Ühe ajapuuduse tõttu välja jäänud parameetri (osoon) lisamine mart.v_limit_exceedances vaatesse. See oleks põnev ära lahendada, kuna vajab võrreldes teiste parameetritega erinevat loogikat (libiseva 8h keskmise väärtuse võrldus piirimääraga).
 
 ## Meeskond
 

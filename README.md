@@ -76,7 +76,7 @@ Vajalikud muutujad:
 | `POSTGRES_PASSWORD` | PostgreSQL parool |
 | `SUPERSET_DB_PASSWORD` | Superset'i metaandmebaasi parool |
 | `SUPERSET_SECRET_KEY` | 	Superset'i sessiooniküpsiste krüptovõti |
-| `SUPERSET_ADMIN_USER / SUPERSET_ADMIN_PASSWORD` | Superset'i admin-kasutaja |
+| `SUPERSET_ADMIN_USER / SUPERSET_ADMIN_PASSWORD` | Superset'i admin-kasutaja ja salasõna |
 | `OPENAQ_API_KEY` | APIst andmete alla laadimiseks vajalik võti |
 | `BACKFILL_DAYS` | Mitme päeva jagu andmeid alla laetakse (vaikimisi 7) |
 
@@ -145,7 +145,6 @@ Testide tulemused salvestatakse tabelisse quality.test_results.
 - API päring salvestab andmekvaliteedinäitajaid percent_complete ja has_flags, aga parameetrite piirväärtuste ületusi kontrolliv andmeteisendus jätab need näitajad kasutamata. Seega hinnangu andmisel kasutatakse kõiki andmeid sõltumata nende kvaliteedist (nt ööpäevaseid keskmisi arvutatakse hoolimata sellest, kui ühes linnas ühe sensoriga on mõõtmistulemuste katvus vaid 20% ehk suurem osa ööpäevaseid mõõtmisi puudub). Samal ajal parameter_min_max kasutab has_flags kvaliteedinäitajat. Seega lisaks on siin ebaühtlane muster kvaliteedinäitajate kasutusel. Edaspidi tuleks välja selgitada kehtivad andmekvaliteedinõuded (nt minimaalne nõutav katvus) ja täiendada teisendust nende järgi, et tulemused oleksid usaldusväärsed ja kvaliteedinäitajate kasutus ühtne.
 - Sensorite ja asukohtade andmed on sisestatud staatilistesse dimensioonitabelitesse käsitsi, kuid ideaalis tuleks need pärida vastavaid API endpointe kasutades otse OpenAQ-st, et vältida sisestamisvigu.
 - Puudub hea kontrollmehanism, mis tuvastaks ja annaks hoiatuse, kui OpenAQ APIs andmed pikema perioodi vältel ei uuene (nt tavapärasele 2-3 tunnisele viitele oleme näinud projekti käigus ka 9+ tunnist viidet).
-- [Loetle ausalt, mis jäi tegemata - see ei mõjuta hinnet negatiivselt, vaid aitab hinnata]
 
 **Mis edasi:**
 - Ühe ajapuuduse tõttu välja jäänud parameetri (osoon) lisamine mart.v_limit_exceedances vaatesse. See oleks põnev ära lahendada, kuna vajab võrreldes teiste parameetritega erinevat loogikat (libiseva 8h keskmise väärtuse võrldus piirimääraga).

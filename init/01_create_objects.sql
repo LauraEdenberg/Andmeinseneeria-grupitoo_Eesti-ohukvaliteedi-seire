@@ -135,13 +135,14 @@ exceedance_1h AS (
         h.location_id,
         h.parameter_name,
         h.year,
+        l.limit_value,
         l.allowed_exceedances_per_year,
         SUM(CASE WHEN h.value > l.limit_value THEN 1 ELSE 0 END) AS no_of_exceedances
     FROM hourly AS h
     JOIN mart.dim_parameter_limits AS l
         ON h.parameter_name = l.parameter_name
         AND l.averaging_period = '1_hour'
-    GROUP BY h.location_id, h.parameter_name, h.year, l.allowed_exceedances_per_year
+    GROUP BY h.location_id, h.parameter_name, h.year, l.limit_value, l.allowed_exceedances_per_year
 ),
 -- 24_hours: päeva keskmine + päevaste ületamiste arv
 daily_avg AS (
@@ -159,13 +160,14 @@ exceedance_24h AS (
         d.location_id,
         d.parameter_name,
         d.year,
+        l.limit_value,
         l.allowed_exceedances_per_year,
         SUM(CASE WHEN d.daily_value > l.limit_value THEN 1 ELSE 0 END) AS no_of_exceedances
     FROM daily_avg AS d
     JOIN mart.dim_parameter_limits AS l
         ON d.parameter_name = l.parameter_name
         AND l.averaging_period = '24_hours'
-    GROUP BY d.location_id, d.parameter_name, d.year, l.allowed_exceedances_per_year
+    GROUP BY d.location_id, d.parameter_name, d.year, l.limit_value, l.allowed_exceedances_per_year
 ),
 -- 1_year: aasta keskmine vs piirmäär
 exceedance_1y AS (
@@ -173,6 +175,7 @@ exceedance_1y AS (
         h.location_id,
         h.parameter_name,
         h.year,
+        l.limit_value,
         l.allowed_exceedances_per_year,
         CASE WHEN AVG(h.value) > l.limit_value THEN 1 ELSE 0 END AS no_of_exceedances
     FROM hourly AS h
@@ -182,11 +185,11 @@ exceedance_1y AS (
     GROUP BY h.location_id, h.parameter_name, h.year, l.allowed_exceedances_per_year, l.limit_value
 ),
 combined AS (
-    SELECT location_id, parameter_name, year, allowed_exceedances_per_year, no_of_exceedances, '1_hour'   AS averaging_period FROM exceedance_1h
+    SELECT location_id, parameter_name, year, limit_value, allowed_exceedances_per_year, no_of_exceedances, '1_hour'   AS averaging_period FROM exceedance_1h
     UNION ALL
-    SELECT location_id, parameter_name, year, allowed_exceedances_per_year, no_of_exceedances, '24_hours' AS averaging_period FROM exceedance_24h
+    SELECT location_id, parameter_name, year, limit_value, allowed_exceedances_per_year, no_of_exceedances, '24_hours' AS averaging_period FROM exceedance_24h
     UNION ALL
-    SELECT location_id, parameter_name, year, allowed_exceedances_per_year, no_of_exceedances, '1_year'   AS averaging_period FROM exceedance_1y
+    SELECT location_id, parameter_name, year, limit_value, allowed_exceedances_per_year, no_of_exceedances, '1_year'   AS averaging_period FROM exceedance_1y
 )
 SELECT
     c.location_id,
@@ -194,6 +197,7 @@ SELECT
     c.parameter_name,
     p.display_name AS parameter_display_name,
     p.default_unit AS unit,
+    c.limit_value,
     c.averaging_period,
     c.year,
     c.no_of_exceedances,

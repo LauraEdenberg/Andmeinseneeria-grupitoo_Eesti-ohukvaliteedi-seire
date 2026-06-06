@@ -55,11 +55,11 @@ GROUP BY
     (f.period_from AT TIME ZONE l.timezone)::date
 ON CONFLICT (location_id, parameter_name, measure_date)
 DO UPDATE SET
-    min_value         = EXCLUDED.min_value,
-    max_value         = EXCLUDED.max_value,
-    avg_value         = EXCLUDED.avg_value,
+    min_value = EXCLUDED.min_value,
+    max_value = EXCLUDED.max_value,
+    avg_value = EXCLUDED.avg_value,
     measurement_count = EXCLUDED.measurement_count,
-    computed_at       = now();
+    computed_at = now();
 
 /*-- ühe tunni andmed, millest edasi eri keskmistamise perioodide tulemusi arvutada ja piirmääradega võrrelda
 WITH hourly AS (

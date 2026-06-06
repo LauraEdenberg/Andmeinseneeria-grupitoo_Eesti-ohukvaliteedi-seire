@@ -52,11 +52,16 @@ cp .env.example .env
 # 3. Käivita teenused
 docker compose up -d --build
 
-# 4. [Vabatahtlik: käivita sissevõtt käsitsi esimesel korral]
-# docker compose exec pipeline python scripts/run_pipeline.py run-all
+# 4. [Vabatahtlik: käivita sissevõtt käsitsi]
+docker compose exec pipeline python scripts/run_pipeline.py run-all
+
+# 5. [Vabatahtlik: vaata võimalikke töövoo samme, mida käivitada]
+docker compose exec pipeline python scripts/run_pipeline.py --help
 ```
 
 Näidikulaud: http://localhost:8088
+
+Näidikulaua vaatamiseks impordi supersetis dashboard .zip failist repositooriumi kaustas /superset/dashboard/.
 
 Näidikulaud värskendab andmevaadet vaikimisi iga 15 sekundi järel. Seda saab muuta .env faili väärtusega DASHBOARD_AUTOREFRESH_SECONDS. Väärtus 0 lülitab automaatse värskenduse välja.
 
@@ -81,8 +86,8 @@ Vajalikud muutujad:
 1. **Sissevõtt** — Skript loeb dimensioonitabelitest aktiivsed sensorid (mart.dim_sensor, mis seob iga sensori asukoha ja saasteainega) ning pärib OpenAQ API-st iga sensori kohta valitud ajavahemiku (vaikimisi viimased 7 päeva) tunnipõhised mõõtmistulemused.
 2. **Laadimine** — Andmed laaditakse `staging` kihti (tabel.staging_parameter_values_raw), kus iga laadimist jälgitakse staging.pipeline_runs tabelis. Korduval laadimisel olemasolevad read uuendatakse (ON CONFLICT (sensor_id, period_from)).
 3. **Transformatsioon** — Toorandmed viiakse staging kihist mart.fact_measurement faktitabelisse (ühendades sensorid asukohtade ja parameetritega). Edasi arvutatakse mart.parameter_min_max tabelisse päevased min-, max- ja keskmised väärtused asukoha ja saasteaine kaupa. Piirmäärade ületamisi hinnatakse vaates mart.v_limit_exceedances, mis võrdleb mõõtmistulemusi mart.dim_parameter_limits piirmääradega eri keskmistamisperioodide kaupa (tunnipõhine, ööpäeva keskmine ja aasta keskmine) ning annab selle põhjal hinnangu, kas väärtused on normi piires või ületavad normi.
-4. **Testimine** — 9 andmekvaliteedi testi kontrollivad korrektsust
-5. **Näidikulaud** — [Kirjelda lühidalt, mida näidikulaud näitab]
+4. **Testimine** — 9 andmekvaliteedi testi kontrollivad töövoo ja andmete korrektsust
+5. **Näidikulaud** — Näidikulaud näitab sisse võetud mõõtmiste arvu, nende keskmist väärtust ja ajavahemikku. Graafikutel on näha keskmine kõigi saasteainete taseme muutus ajas ning samuti keskmised mõõdetud tasemed saasteainete lõikes linnade kaupa. Näidikulaua alumises osas on visualiseeritud päevane näitajate kõikumine ja piirväärtuste ületamised tabelitena inimloetaval kujul. 
 
 ## Andmekvaliteedi testid
 
@@ -103,6 +108,7 @@ Testide tulemused salvestatakse tabelisse quality.test_results.
 ├── README.md
 ├── compose.yml
 ├── .env.example
+├── .gitattributes
 ├── .gitignore
 ├── Dockerfile.app
 ├── Dockerfile.superset
@@ -120,7 +126,10 @@ Testide tulemused salvestatakse tabelisse quality.test_results.
 |   ├── run_pipeline.py
 |   └── start_cron.sh
 ├── superset/
+|   ├── dashboard
+|   |   └── eesti-ohukvaliteedi-seire_dashboard.zip
 |   └── superset_config.py
+
 ```
 
 ## Kokkuvõte, puudused ja võimalikud edasiarendused

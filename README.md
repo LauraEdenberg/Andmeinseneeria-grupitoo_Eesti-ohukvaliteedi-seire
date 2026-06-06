@@ -67,19 +67,18 @@ Näidikulaud värskendab andmevaadet vaikimisi iga 15 sekundi järel. Seda saab 
 
 ## Saladused ja konfiguratsioon
 
-Kõik saladused (paroolid, API võtmed, andmebaasi URL-id) on `.env` failis. Repos on ainult `.env.example`, mis näitab vajalike muutujate struktuuri ilma tegelike väärtusteta. Päris `.env` faili ei tohi GitHubi panna - see on `.gitignore`-s.
+Kõik saladused (paroolid, API võtmed, andmebaasi URL-id) on `.env` failis. Repos on ainult `.env.example`, mis näitab vajalike muutujate struktuuri ilma tegelike väärtusteta. Päris `.env` fail on `.gitignore`-s.
 
 Vajalikud muutujad:
 
-| Muutuja | Tähendus | Näide |
-|---------|----------|-------|
-| `POSTGRES_PASSWORD` | PostgreSQL parool | (saladus) |
-| `SUPERSET_DB_PASSWORD` | Superset'i metaandmebaasi parool | ... |
-| `SUPERSET_SECRET_KEY` | 	Superset'i sessiooniküpsiste krüptovõti | ... |
-| `SUPERSET_ADMIN_USER / SUPERSET_ADMIN_PASSWORD` | Superset'i admin-kasutaja | ... |
-| `OPENAQ_API_KEY` | APIst andmete alla laadimiseks vajalik võti | ... |
-| `BACKFILL_DAYS` | Mitme päeva jagu andmeid alla laetakse (vaikimisi 7) | ... |
-| `[teised]` | ... | ... |
+| Muutuja | Tähendus |
+|---------|----------|
+| `POSTGRES_PASSWORD` | PostgreSQL parool |
+| `SUPERSET_DB_PASSWORD` | Superset'i metaandmebaasi parool |
+| `SUPERSET_SECRET_KEY` | 	Superset'i sessiooniküpsiste krüptovõti |
+| `SUPERSET_ADMIN_USER / SUPERSET_ADMIN_PASSWORD` | Superset'i admin-kasutaja |
+| `OPENAQ_API_KEY` | APIst andmete alla laadimiseks vajalik võti |
+| `BACKFILL_DAYS` | Mitme päeva jagu andmeid alla laetakse (vaikimisi 7) |
 
 ## Andmevoog lühidalt
 

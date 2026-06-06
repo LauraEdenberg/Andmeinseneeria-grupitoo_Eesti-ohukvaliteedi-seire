@@ -110,6 +110,7 @@ Testide tulemused salvestatakse tabelisse quality.test_results.
 ├── .env.example
 ├── .gitattributes
 ├── .gitignore
+├── abiinfo
 ├── Dockerfile.app
 ├── Dockerfile.superset
 ├── docs/
@@ -143,10 +144,13 @@ Testide tulemused salvestatakse tabelisse quality.test_results.
 **Puudused:**
 - Andmeteisendus ei järgi ühtset mustrit: 1) ööpäevaste kõikumiste leidmisel salvestatakse tulemused nii tabelisse kui koostatakse eraldi vaade, 2) parameetrite piirväärtuste ületamist arvutav teisendus on seevastu lahendatud ainult vaatena. Mõlemal juhul koostati vaated selleks, et oleks teisendusi võimalik inimloetaval ja esitletaval kujul lihtsasti Superseti tarbeks rakendada. Sellegipoolest muudab selline dokumenteerimata ja ebaühtlane lahendus koodi raskemini loetavaks - seda nii teistele grupiliikmetele praegu kui ka tegijale endale hiljem, sest detailid ununevad. Edaspidi oleks mõistlik alustada (dokumenteeritud) kokkuleppest, millise mustri järgi iga kihi andmeteisendused tehakse.
 - API päring salvestab andmekvaliteedinäitajaid percent_complete ja has_flags, aga parameetrite piirväärtuste ületusi kontrolliv andmeteisendus jätab need näitajad kasutamata. Seega hinnangu andmisel kasutatakse kõiki andmeid sõltumata nende kvaliteedist (nt ööpäevaseid keskmisi arvutatakse hoolimata sellest, kui ühes linnas ühe sensoriga on mõõtmistulemuste katvus vaid 20% ehk suurem osa ööpäevaseid mõõtmisi puudub). Samal ajal parameter_min_max kasutab has_flags kvaliteedinäitajat. Seega lisaks on siin ebaühtlane muster kvaliteedinäitajate kasutusel. Edaspidi tuleks välja selgitada kehtivad andmekvaliteedinõuded (nt minimaalne nõutav katvus) ja täiendada teisendust nende järgi, et tulemused oleksid usaldusväärsed ja kvaliteedinäitajate kasutus ühtne.
+- Sensorite ja asukohtade andmed on sisestatud staatilistesse dimensioonitabelitesse käsitsi, kuid ideaalis tuleks need pärida vastavaid API endpointe kasutades otse OpenAQ-st, et vältida sisestamisvigu.
+- Puudub hea kontrollmehanism, mis tuvastaks ja annaks hoiatuse, kui OpenAQ APIs andmed pikema perioodi vältel ei uuene (nt tavapärasele 2-3 tunnisele viitele oleme näinud projekti käigus ka 9+ tunnist viidet).
 - [Loetle ausalt, mis jäi tegemata - see ei mõjuta hinnet negatiivselt, vaid aitab hinnata]
 
 **Mis edasi:**
 - Ühe ajapuuduse tõttu välja jäänud parameetri (osoon) lisamine mart.v_limit_exceedances vaatesse. See oleks põnev ära lahendada, kuna vajab võrreldes teiste parameetritega erinevat loogikat (libiseva 8h keskmise väärtuse võrldus piirimääraga).
+- Hoiatus(alert), kui mitu pipeline jooksu järjest ei tooda sisse uusi andmeid.
 
 ## Meeskond
 

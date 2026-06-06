@@ -61,7 +61,7 @@ DO UPDATE SET
     measurement_count = EXCLUDED.measurement_count,
     computed_at       = now();
 
--- ühe tunni andmed, millest edasi eri keskmistamise perioodide tulemusi arvutada ja piirmääradega võrrelda
+/*-- ühe tunni andmed, millest edasi eri keskmistamise perioodide tulemusi arvutada ja piirmääradega võrrelda
 WITH hourly AS (
     SELECT
         location_id,
@@ -146,6 +146,7 @@ FROM (
     SELECT location_id, parameter_name, year, allowed_exceedances_per_year, no_of_exceedances, '1_year' AS averaging_period FROM exceedance_1y
 ) AS combined
 ORDER BY location_id, parameter_name, averaging_period, year;
+*/
 
 /*
 SELECT

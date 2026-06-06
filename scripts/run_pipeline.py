@@ -328,12 +328,10 @@ def transform() -> None:
     try:
         seed_dimensions(conn)
         execute_sql_file(conn, TRANSFORM_SQL)
-        #daily_rows = fetch_value(conn, "SELECT COUNT(*) FROM mart.daily_weather_summary;")
-        #latest_rows = fetch_value(conn, "SELECT COUNT(*) FROM mart.latest_daily_weather_summary;")
-        #window_rows = fetch_value(conn, "SELECT COUNT(*) FROM mart.latest_outdoor_activity_windows;")
-        #log(f"Transformatsioon valmis. Päevaseid koondridu kokku: {daily_rows}.")
-        #log(f"Viimase laadimise päevaseid koondridu: {latest_rows}.")
-        #log(f"Viimase laadimise 3-tunniseid ajaaknaid: {window_rows}.")
+        total_measurements = fetch_value(conn, "SELECT COUNT(*) FROM mart.fact_measurement")
+        latest_rows = fetch_value(conn, "SELECT SUM(measurement_count) FROM mart.parameter_min_max WHERE measure_date = CURRENT_DATE;")
+        log(f"Mõõtmistulemusi kokku: {total_measurements}.")
+        log(f"Tänaseid mõõtmisi: {latest_rows}.")
         log("Transformatsioon valmis.")
     finally:
         conn.close()
@@ -534,6 +532,7 @@ def main() -> int:
             reset_data()
         elif args.command == "run-all":
             run_all()
+            
         return 0
     except UserFacingError as exc:
         print(f"Viga: {exc}", file=sys.stderr)

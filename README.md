@@ -133,7 +133,7 @@ Testide tulemused salvestatakse tabelisse `quality.test_results`.
 |   ├── run_pipeline.py
 |   └── start_cron.sh
 ├── superset/
-|   ├── dashboard
+|   ├── dashboard/
 |   |   └── eesti-ohukvaliteedi-seire_dashboard.zip
 |   └── superset_config.py
 

@@ -253,6 +253,7 @@ def ingest() -> uuid.UUID:
     conn = get_connection()
     try:
         seed_dimensions(conn)
+        log("Staatilised dimensioonitabelid täidetud.")
         sensors = load_active_sensors(conn)
         insert_pipeline_run(
             conn,

@@ -35,7 +35,7 @@ Kuidas erineb õhukvaliteet Eesti suuremates linnades (Tallinna, Tartu, Narva) n
 | Sissevõtt | Python |
 | Transformatsioon | SQL |
 | Andmehoidla | PostgreSQL |
-| Näidikulaud | Superset |
+| Näidikulaud | Apache Superset 6.0.0 |
 | Orkestreerimine | cron |
 
 ## Käivitamine
@@ -59,9 +59,16 @@ docker compose exec pipeline python scripts/run_pipeline.py run-all
 docker compose exec pipeline python scripts/run_pipeline.py --help
 ```
 
-Näidikulaud: http://localhost:8088
+## Superset näidikulaud
 
-Näidikulaua vaatamiseks impordi supersetis dashboard .zip failist repositooriumi kaustas /superset/dashboard/.
+Näidikulaud on kättesaadav aadressil: http://localhost:8088
+
+Esmakordsel kasutamisel tuleb sisse logida `.env` failis määratud administraatori kasutajaga:
+
+- Kasutajanimi: `SUPERSET_ADMIN_USER`
+- Parool: `SUPERSET_ADMIN_PASSWORD`
+
+Näidikulaua vaatamiseks impordi Supersetis dashboard .zip failist repositooriumi kaustas /superset/dashboard/.
 
 Näidikulaud värskendab andmevaadet vaikimisi iga 15 sekundi järel. Seda saab muuta .env faili väärtusega DASHBOARD_AUTOREFRESH_SECONDS. Väärtus 0 lülitab automaatse värskenduse välja.
 

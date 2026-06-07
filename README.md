@@ -105,7 +105,7 @@ Projekt kontrollib järgmist:
 4. `mart.parameter_min_max` tabelis ei ole minimaalne ega maksimaalne väärtus NULL;
 5. `mart.v_limit_exceedances` vaates ei ole piirväärtuste ületamise arv NULL.
 
-Testide tulemused salvestatakse tabelisse quality.test_results.
+Testide tulemused salvestatakse tabelisse `quality.test_results`.
 
 ## Projekti struktuur
 

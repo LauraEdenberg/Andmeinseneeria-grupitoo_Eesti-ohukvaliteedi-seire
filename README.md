@@ -23,10 +23,10 @@ Kuidas erineb õhukvaliteet Eesti suuremates linnades (Tallinna, Tartu, Narva) n
 | Allikas | Tüüp | Ajas muutuv? | Roll |
 |---------|------|--------------|------|
 | OpenAQ API | Avalik HTTP API | Jah, iga 1 tund, 2-3 tunnise viitega reaalajast | Põhiandmevoog |
-| mart.dim_location | Staatiline dimensioonitabel | Ei, staatiline | Asukohtade püsivad tunnused ja API päringu koordinaadid |
-| mart.dim_parameter | Staatiline dimensioonitabel | Ei, staatiline | Saasteainete püsivad tunnused |
-| mart.dim_parameter_limits | Staatiline dimensioonitabel | Ei, staatiline | Saasteainete piirväärtused Eestis/EUs |
-| mart.dim_sensor | Staatiline dimensioonitabel | Ei, staatiline | Sensorite püsivad tunnused |
+| `mart.dim_location` | Staatiline dimensioonitabel | Ei, staatiline | Asukohtade püsivad tunnused ja API päringu koordinaadid |
+| `mart.dim_parameter` | Staatiline dimensioonitabel | Ei, staatiline | Saasteainete püsivad tunnused |
+| `mart.dim_parameter_limits` | Staatiline dimensioonitabel | Ei, staatiline | Saasteainete piirväärtused Eestis/EUs |
+| `mart.dim_sensor` | Staatiline dimensioonitabel | Ei, staatiline | Sensorite püsivad tunnused |
 
 ## Stack
 
@@ -47,7 +47,7 @@ cd Andmeinseneeria-grupitoo_Eesti-ohukvaliteedi-seire
 
 # 2. Kopeeri keskkonnamuutujad
 cp .env.example .env
-# Muuda .env failis paroolid ja muud seaded vastavalt vajadusele
+# Muuda `.env` failis paroolid ja muud seaded vastavalt vajadusele
 
 # 3. Käivita teenused
 docker compose up -d --build
@@ -70,7 +70,7 @@ Esmakordsel kasutamisel tuleb sisse logida `.env` failis määratud administraat
 
 Näidikulaua vaatamiseks impordi Supersetis dashboard .zip failist repositooriumi kaustas /superset/dashboard/.
 
-Näidikulaud värskendab andmevaadet vaikimisi iga 15 sekundi järel. Seda saab muuta .env faili väärtusega DASHBOARD_AUTOREFRESH_SECONDS. Väärtus 0 lülitab automaatse värskenduse välja.
+Näidikulaud värskendab andmevaadet vaikimisi iga 15 sekundi järel. Seda saab muuta `.env` faili väärtusega DASHBOARD_AUTOREFRESH_SECONDS. Väärtus 0 lülitab automaatse värskenduse välja.
 
 ## Saladused ja konfiguratsioon
 
@@ -89,9 +89,9 @@ Vajalikud muutujad:
 
 ## Andmevoog lühidalt
 
-1. **Sissevõtt** — Skript loeb dimensioonitabelitest aktiivsed sensorid (mart.dim_sensor, mis seob iga sensori asukoha ja saasteainega) ning pärib OpenAQ API-st iga sensori kohta valitud ajavahemiku (vaikimisi viimased 7 päeva) tunnipõhised mõõtmistulemused.
-2. **Laadimine** — Andmed laaditakse `staging` kihti (tabel staging.parameter_values_raw), kus iga laadimist jälgitakse staging.pipeline_runs tabelis. Korduval laadimisel olemasolevad read uuendatakse (ON CONFLICT (sensor_id, period_from)).
-3. **Transformatsioon** — Toorandmed viiakse staging kihist mart.fact_measurement faktitabelisse (ühendades sensorid asukohtade ja parameetritega). Edasi arvutatakse mart.parameter_min_max tabelisse päevased min-, max- ja keskmised väärtused asukoha ja saasteaine kaupa. Piirväärtuste ületamisi hinnatakse vaates mart.v_limit_exceedances, mis võrdleb mõõtmistulemusi mart.dim_parameter_limits piirväärtustega eri keskmistamisperioodide kaupa (tunnipõhine, ööpäeva keskmine ja aasta keskmine) ning annab selle põhjal hinnangu, kas väärtused on normi piires või ületavad normi.
+1. **Sissevõtt** — Skript loeb dimensioonitabelitest aktiivsed sensorid (`mart.dim_sensor`, mis seob iga sensori asukoha ja saasteainega) ning pärib OpenAQ API-st iga sensori kohta valitud ajavahemiku (vaikimisi viimased 7 päeva) tunnipõhised mõõtmistulemused.
+2. **Laadimine** — Andmed laaditakse `staging` kihti (tabel `staging.parameter_values_raw`), kus iga laadimist jälgitakse `staging.pipeline_runs` tabelis. Korduval laadimisel olemasolevad read uuendatakse (ON CONFLICT (sensor_id, period_from)).
+3. **Transformatsioon** — Toorandmed viiakse staging kihist `mart.fact_measurement` faktitabelisse (ühendades sensorid asukohtade ja parameetritega). Edasi arvutatakse `mart.parameter_min_max` tabelisse päevased min-, max- ja keskmised väärtused asukoha ja saasteaine kaupa. Piirväärtuste ületamisi hinnatakse vaates `mart.v_limit_exceedances`, mis võrdleb mõõtmistulemusi `mart.dim_parameter_limits` piirväärtustega eri keskmistamisperioodide kaupa (tunnipõhine, ööpäeva keskmine ja aasta keskmine) ning annab selle põhjal hinnangu, kas väärtused on normi piires või ületavad normi.
 4. **Testimine** — 9 andmekvaliteedi testi kontrollivad töövoo ja andmete korrektsust
 5. **Näidikulaud** — Näidikulaud näitab mart tabelite ja vaadete põhjal sisse võetud mõõtmiste arvu, nende keskmist väärtust, piirmäärade ületamise arvu ja kuvatud mõõtmiste ajavahemikku. Graafikutel on näha keskmine kõigi saasteainete taseme muutus ajas ning samuti keskmised mõõdetud tasemed saasteainete lõikes linnade kaupa. Eraldi on lisatud graafik Lämmastikdioksiidi (NO₂) kõikumistest päeva jooksul, sest see on kõige tundub liiklussaaste näitaja. Näidikulaua alumises osas on visualiseeritud päevane näitajate kõikumine ja piirväärtuste ületamised tabelitena inimloetaval kujul. 
 
@@ -99,11 +99,11 @@ Vajalikud muutujad:
 
 Projekt kontrollib järgmist:
 
-1. koodi käivitamisel tekivad read järgnevatesse tabelitesse: asukohtade dimensioon (mart.dim_location), parameetrite dimensioon (mart.dim_parameter), sensorite dimensioon (mart.dim_sensor), saasteainete piirväärtuste dimensioon (mart.dim_parameter_limits) ja toorandmete tabel staging.parameter_values_raw;
+1. koodi käivitamisel tekivad read järgnevatesse tabelitesse: asukohtade dimensioon `mart.dim_location`, parameetrite dimensioon `mart.dim_parameter`, sensorite dimensioon `mart.dim_sensor`, saasteainete piirväärtuste dimensioon `mart.dim_parameter_limits` ja toorandmete tabel `staging.parameter_values_raw`;
 2. sama sensori, kuupäeva ja kellaaja kohta ei teki duplikaate;
 3. saasteainete kontsentratsioonid ei ole negatiivsed;
-4. mart.parameter_min_max tabelis ei ole minimaalne ega maksimaalne väärtus NULL;
-5. mart.v_limit_exceedances vaates ei ole piirväärtuste ületamise arv NULL.
+4. `mart.parameter_min_max` tabelis ei ole minimaalne ega maksimaalne väärtus NULL;
+5. `mart.v_limit_exceedances` vaates ei ole piirväärtuste ületamise arv NULL.
 
 Testide tulemused salvestatakse tabelisse quality.test_results.
 

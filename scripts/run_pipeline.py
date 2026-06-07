@@ -326,7 +326,6 @@ def fetch_value(conn, query: str):
 def transform() -> None:
     conn = get_connection()
     try:
-        seed_dimensions(conn)
         execute_sql_file(conn, TRANSFORM_SQL)
         total_measurements = fetch_value(conn, "SELECT COUNT(*) FROM mart.fact_measurement")
         latest_rows = fetch_value(conn, "SELECT SUM(measurement_count) FROM mart.parameter_min_max WHERE measure_date = CURRENT_DATE;")
